@@ -712,9 +712,10 @@ namespace WindowsFormsApplication1
                 Action action2 = () => { progressBar1.Maximum = PL.DistCount; progressBar1.Value = ND; }; Invoke(action2);
                 
             }
-            
+            StartEndDist();
+            BeforeAndAfterDis();
+            Print();
             PL.DistCount = 0;
-            PL.ProgressBarMaxCount = 0;
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
             OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
             con.Open();
@@ -746,6 +747,30 @@ namespace WindowsFormsApplication1
                     command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_направления_подготовки)=" + code + ") AND ((Дисциплины_профиля.Дисциплины)='" + PLtime[i].Naim + "'));";
                     var code_distip = command.ExecuteScalar();
                     reader.Close();
+                    //компетенции
+                    for (int y = 0; y <= PLtime[i].Compet.Count - 1 ; y++)
+                    {
+                        // 
+                        command.CommandText = "INSERT INTO Компетенция (Код_направления,Код_дисциплины,Компетенция) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].Compet[y] + "');";
+                        reader = command.ExecuteReader();
+                        reader.Close(); 
+                    }
+                    //дисциплины до
+                    for (int y1 = 0; y1 <= PLtime[i].PreDis.Count - 1; y1++)
+                    {
+                        // 
+                        command.CommandText = "INSERT INTO Дисциплина_до (Код_направление_подготовки,Код_дисциплины,Дисциплина_до) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].PreDis[y1] + "');";
+                        reader = command.ExecuteReader();
+                        reader.Close();
+                    }
+                    //дисциплины после
+                    for (int y2 = 0; y2 <= PLtime[i].AfterDis.Count - 1; y2++)
+                    {
+                        // 
+                        command.CommandText = "INSERT INTO Дисциплина_после (Код_направление_подготовки,Код_дисциплины,Дисциплина_после) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].AfterDis[y2] + "');";
+                        reader = command.ExecuteReader();
+                        reader.Close();
+                    }
                     int t; // прохождение по симестрам
                     for (t = 0; t <= 9; t++)
                     {
@@ -769,9 +794,7 @@ namespace WindowsFormsApplication1
 
             }
             Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока
-            StartEndDist();
-            BeforeAndAfterDis();
-            Print();
+
         }
 
        
