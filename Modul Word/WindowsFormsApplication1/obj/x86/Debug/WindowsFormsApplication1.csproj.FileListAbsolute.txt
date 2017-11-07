@@ -90,3 +90,11 @@ E:\Мои проекты\Прога2(V3)\Прога2\WindowsFormsApplication1\ob
 E:\Мои проекты\Прога2(V3)\Прога2\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
 E:\Мои проекты\Прога2(V3)\Прога2\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
 E:\Мои проекты\Прога2(V3)\Прога2\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\My project\Our project\my project\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache

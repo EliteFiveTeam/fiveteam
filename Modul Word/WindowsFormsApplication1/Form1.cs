@@ -50,7 +50,7 @@ namespace WindowsFormsApplication1
             InitializeComponent();
         }
     
-        public string SearchText(string wordText1, string wordText2, int nf) // Поиск между двумя фрагментами
+        public string SearchText(string wordText1, string wordText2, int nf) // Поиск между двумя фрагментами - главный метод 
         {
             Microsoft.Office.Interop.Word.Range r;//Range
             string st;
@@ -90,7 +90,6 @@ namespace WindowsFormsApplication1
                 if (CountKFind >= nf) // если нужный по счету фрагмент найден
                 {
                     r = WordApp.ActiveDocument.Range(r.Start, r.End);
-                    //richTextBox1.Text = richTextBox1.Text + r.Text;
                 }
             }
             if (CountKFind == 0)
@@ -119,19 +118,20 @@ namespace WindowsFormsApplication1
         {
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) // Метод, открывающий ворд документ
         {
-            string Filename; 
+            string Filename_; 
             WordApp = new word.Application(); // создаем объект word;
             WordApp.Visible = true; // показывает или скрывает файл word;
             openFileDialog1.ShowDialog();
-            Filename = openFileDialog1.FileName;
-            WordApp.Documents.Add(Filename);// загружаем в word файл с рабочей книгой 
+            openFileDialog1.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx"; // фильтрует, оставляя только ворд файлы
+            Filename_ = openFileDialog1.FileName;
+            WordApp.Documents.Add(Filename_);// загружаем в word файл с рабочей книгой 
 
             //Thread theard = new Thread(SearchText); //второй поток для 
             //theard.Start();
             //Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);  // Запуск главного потока 
-        } // Открытие word документа
+        } 
             
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
@@ -148,78 +148,13 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) // Кнопка создания новой рабочей программы
         {
-        //    int k;
-        //    k = Int32.Parse(textBox3.Text);
-        //    string findText = textBox2.Text;
-        //    SearchText(textBox2.Text, textBox4.Text, k);
-        //    int intFound = 0;
-        //    WordApp.Selection.Start = 0;
-        //    WordApp.Selection.End = 0;
-        //    WordApp.Selection.Select();
-        //    WordApp.Selection.Find.ClearFormatting();    
-        //    if (WordApp.Selection.Find.Execute(findText, Forward:true, MatchWildcards:true, Wrap:word.WdFindWrap.wdFindContinue))
-        //    {
-        //        MessageBox.Show("Text found.");
-        //        int f1;
-        //        int f2;
-                
-        //        f1 = findText.IndexOf("*");
-        //        f2 = findText.Length-f1+2;
-        //        WordApp.Selection.Start = WordApp.Selection.Start + f1;
-        //        WordApp.Selection.End = WordApp.Selection.End - f2;
-        //        WordApp.Selection.Select();
-
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("The text could not be located.");
-        //    }
-        //    int p1 = 0;
-        //    int p2 = 0;
-        //   while(WordApp.Selection.Find.Found)
-        //   {
-        //       bool prov;
-        //       intFound++;
-        //  prov = WordApp.Selection.Find.Execute(findText, Forward: true, MatchWildcards: true, Wrap: word.WdFindWrap.wdFindContinue);
-        //  int f1;
-        //  int f2;
-         
-        //       if (intFound == 1)
-        //       {
-        //           p1 = WordApp.Selection.Start;
-        //       }
-        //       else 
-        //       {
-        //           p2 = WordApp.Selection.Start;
-        //       }
-        //        MessageBox.Show("Strings found: " + intFound.ToString());
-        //       if (p1 == p2)
-        //       {
-                   
-        //           break;
-        //       }
-        //       f1 = findText.IndexOf("*");
-        //       f2 = findText.Length - f1 + 1;
-        //       WordApp.Selection.Start = WordApp.Selection.Start + f1;
-        //       WordApp.Selection.End = WordApp.Selection.End - f2;
-        //       string vd = WordApp.Selection.Text;
-        //       richTextBox1.Text = richTextBox1.Text + vd.Trim(); 
-
-        //   }
-           
-
-           
-            
-        
-        } // Первый вариант поиска 
+        } 
 
         private void button3_Click(object sender, EventArgs e)
         { 
-            
- 
-        }
+        } // бесполезная кнопка.
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -229,7 +164,7 @@ namespace WindowsFormsApplication1
         private void button4_Click(object sender, EventArgs e) // Основная кнопка поиска
         {
             
-            //Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока 
+            Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока 
             
             SearchText(textBox2.Text, textBox4.Text, CountKFind);
             int N = 0;
@@ -267,7 +202,6 @@ namespace WindowsFormsApplication1
                 int m21 = r.ListParagraphs.Count;
                 for (int y = 1; y <= r.ListParagraphs.Count;  y++)
                 {
-                    //MessageBox.Show(""+ m21);
                     string dfs = r.ListParagraphs[y].Range.Text;
                     D.MyListAdd(dfs, false);
                     richTextBox4.Text = richTextBox4.Text + D.LiteraBasic[y-1];
@@ -289,17 +223,16 @@ namespace WindowsFormsApplication1
                 int m12 = r.ListParagraphs.Count;
                 for (int x = 1; x <= r.ListParagraphs.Count; x++)
                 {
-                    //MessageBox.Show(""+ m12);
                     string dsf = r.ListParagraphs[x].Range.Text;
                     D.MyListAdd(dsf, true);
                     richTextBox5.Text = richTextBox5.Text + D.LiteraAdditional[x-1];
                 }
-            }
+            } // поиск закончился, литература записана в массив
 
-
+            //находим цели дисциплины
             if (ss == "") //' Если цели не попали в оглавление
             {
-                ss = SearchText("явля?????", "Учебные задачи дисциплины", 2);
+                ss = SearchText("явля?????", "Учебные задачи дисциплины", 2); // искомый текст после оглавления
             }
 
                 ss = ss.TrimEnd(MyChar);
@@ -310,7 +243,7 @@ namespace WindowsFormsApplication1
                 }
                 else
                 {
-                    D.Cel = ss;
+                    D.Cel = ss;// записали переменную цель
                 }
 
             
@@ -331,7 +264,7 @@ namespace WindowsFormsApplication1
     }
         else
         {
-            D.Tasks = ss; 
+            D.Tasks = ss; // записали цели
         }
             //Находим знания, умения и владения и оставляем все до знаков препинания и символов перевода, или цифр 2, 3.
             ss = SearchText("Знать:", "Уметь:", 1);
@@ -346,7 +279,6 @@ namespace WindowsFormsApplication1
         D.Um_after = ss.TrimEnd(MyChar);
         ss = SearchText("Владеть:", ".", 2);
         D.Vl_after = ss.TrimEnd(MyChar);
-//Tema tt = new Tema();
         byte razd = 1;  //'номер раздела
         int CountTems = 0;
         for (i = 2; i <= WordApp.ActiveDocument.Tables[2].Rows.Count; i++)
@@ -371,8 +303,11 @@ namespace WindowsFormsApplication1
                 }
             }     
         }
+        D.Nt = CountTems; //Записали количество тем в дисциплине
+
         Clipboard.Clear();
 
+            // считываются темы и их литература, вопросы для самопроверки
         ss = SearchText("Перечень учебно-методического обеспечения для самостоятельной работы обучающихся по дисциплине", "Материально-техническое обеспечение дисциплины", 2);
         Clipboard.SetText(ss);
         
@@ -470,6 +405,7 @@ namespace WindowsFormsApplication1
 
 
             Clipboard.Clear();
+            // поиск вопросов к экзаменам
             int k, k1; // ' метки для найденных символов
             k = richTextBox2.Find("Тема 1");
             richTextBox2.SelectAll();
@@ -561,93 +497,62 @@ namespace WindowsFormsApplication1
 
 
         Clipboard.Clear();
-        //Поиск вопросов к экзамену/зачёту
+        //Поиск вопросов к экзамену/зачёту с учётом итогового контроля
         string exstr1 = "Вопросы к";
         string exstr2 = "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ";
+        string exstr3 = "Итоговый контроль";
         string exgg1; 
-
-        // Поиск 
-        r.Find.Text = exstr1 + "*" + exstr2;
-        r.Find.Forward = true;
-        string exf1 = r.Find.Text;
-        r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-        r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
-        if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
+        ss = SearchText("Вопросы к", "Итоговый контроль", 1);
+        if (ss != "")
         {
+            // Поиск 
+            r.Find.Text = exstr1 + "*" + exstr3;
+            r.Find.Forward = true;
+            string exf1 = r.Find.Text;
+            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
 
-
-            exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr2.Length).Text; //убираем кл.
-            r.Start = r.Start + exstr1.Length;
-            r.End = r.End - exstr2.Length;
-            int exm21 = r.ListParagraphs.Count;
-            for (int y = 1; y <= r.ListParagraphs.Count; y++)
+            if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
             {
-                //MessageBox.Show("" + exm21);
-                string dfs = r.ListParagraphs[y].Range.Text;
-                D.MyForExamAdd(dfs);
-                richTextBox1.Text = richTextBox1.Text + D.ForExam[y-1];
+
+                exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr3.Length).Text; //убираем кл.
+                r.Start = r.Start + exstr1.Length;
+                r.End = r.End - exstr3.Length;
+                int exm21 = r.ListParagraphs.Count;
+                for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                {
+                    string dfs = r.ListParagraphs[y].Range.Text;
+                    D.MyForExamAdd(dfs);
+                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
+                }
+
+
+            }   
+        }
+        else
+        {
+            r.Find.Text = exstr1 + "*" + exstr2;
+            r.Find.Forward = true;
+            string exf1 = r.Find.Text;
+            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+
+            if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
+            {
+                exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr2.Length).Text; //убираем кл.
+                r.Start = r.Start + exstr1.Length;
+                r.End = r.End - exstr2.Length;
+                int exm21 = r.ListParagraphs.Count;
+                for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                {
+                    string dfs = r.ListParagraphs[y].Range.Text;
+                    D.MyForExamAdd(dfs);
+                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
+                }
             }
+
         }
-
-
-
-            //' Теперь надо выделить вопросы к экзамену и записать их в массив вопросов
-            //int k0;
-            //string ss1;
-            //if (richTextBox3.Text != "")
-            //{
-            //    k0 = richTextBox3.Find("Вопросы");
-            //    if (k0 > 0)  //' манипуляции с k0, k, k1 для повышения надежности поиска вопросов
-            //    {
-            //        int m; //'сколько знаков вырезать с номером вопроса
-            //        for (i = 1; i <= 100; i++)
-            //        {
-            //            if (i < 10)
-            //            {
-            //                m = 3;
-            //            }
-            //            else
-            //            {
-            //                m = 4;
-            //            }
-            //            //}
-
-            //            ss = i + ".";
-            //            k = richTextBox3.Find(ss, k0, RichTextBoxFinds.NoHighlight);
-            //            ss = (i + 1) + ".";
-            //            k1 = richTextBox3.Find(ss, k, RichTextBoxFinds.NoHighlight);
-            //            if (k1 > k + m) // ' если очередной вопрос найден то выделим его и через буфер обмена перенесем в массив
-            //            {
-            //                richTextBox3.Select(k + m, k1 - k - m);
-            //                richTextBox3.Copy();
-            //                ss1 = Clipboard.GetText();
-            //                D.MyForExamAdd(ss1);
-            //            }
-            //            else
-            //            {
-            //                //Exit For
-            //            }
-
-            //            k0 = k;
-            //            //Next i
-                        
-            //        }
-            //    }
-            //}
-            //    /*
-            //        WordApp.ActiveDocument.Close();
-            //        WordApp.Quit();
-            //     */
-            //    //try
-            //    //{
-            //    //}
-            //    //catch //' попытка отстроится от ошибок и файл все равно закрыть
-            //    //{
-            //    //    WordApp.ActiveDocument.Close();
-            //    //    WordApp.Quit();
-            //    //}
-        }
+    }
         
         
    
@@ -665,59 +570,6 @@ namespace WindowsFormsApplication1
         {
 
         } 
-       /* public string SearchExam()
-        {
-            //Поиск вопросов к экзамену/зачёту
-            string str1 = "Вопросы к";
-            string str2 = "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ";
-            string gg1; string gg2;
-
-            // Поиск 
-            r.Find.Text = str1 + "*" + str2;
-            r.Find.Forward = true;
-            string f1 = r.Find.Text;
-            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
-            if (r.Find.Execute(f1))// Проверка поиска, если нашёл фрагменты, то...
-            {
-
-
-                gg1 = WordApp.ActiveDocument.Range(r.Start + str1.Length, r.End - str2.Length).Text; //убираем кл.
-                r.Start = r.Start + str1.Length;
-                r.End = r.End - str2.Length;
-                int m21 = r.ListParagraphs.Count;
-                for (int y = 1; y <= r.ListParagraphs.Count; y++)
-                {
-                    MessageBox.Show(""+ m21);
-                    string dfs = r.ListParagraphs[y].Range.Text;
-                    D.MyListAdd(dfs, false);
-                    richTextBox4.Text = richTextBox4.Text + D.ForExam[y - 1];
-                }
-            }
-            // поиск дополнительной литературы
-            r.Find.Text = str2 + "*" + str3;
-            r.Find.Forward = true;
-            string f2 = r.Find.Text;
-            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-            if (r.Find.Execute(f2))// Проверка поиска, если нашёл фрагменты, то...
-            {
-
-
-                gg2 = WordApp.ActiveDocument.Range(r.Start + str2.Length, r.End - str3.Length).Text; //убираем кл.
-                r.Start = r.Start + str2.Length;
-                r.End = r.End - str3.Length;
-                int m12 = r.ListParagraphs.Count;
-                for (int x = 1; x <= r.ListParagraphs.Count; x++)
-                {
-                    //MessageBox.Show(""+ m12);
-                    string dsf = r.ListParagraphs[x].Range.Text;
-                    D.MyListAdd(dsf, true);
-                    richTextBox5.Text = richTextBox5.Text + D.LiteraAdditional[x - 1];
-                }
-            }
-        }*/
    }
 }
 
