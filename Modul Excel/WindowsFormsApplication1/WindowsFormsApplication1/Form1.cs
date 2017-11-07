@@ -713,52 +713,61 @@ namespace WindowsFormsApplication1
                 
             }
             
- //           //PL.DistCount = 0;
- //           OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
- //           OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
- //           con.Open();
- //           OleDbDataReader reader;
- //           command.CommandText = "INSERT INTO Направление_подготовки (Профиль, Направление_подготовки, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');";
- //           reader = command.ExecuteReader();
- //           reader.Close();
- //           // получаем id из Направление_подготовки для записи в Дисциплины_профиля
- //           command.CommandText = "SELECT Направление_подготовки.Код FROM Направление_подготовки WHERE (((Направление_подготовки.[Направление_подготовки])='" + PL.Napr + "') AND ((Направление_подготовки.[Профиль])='" + PL.Profile + "') AND ((Направление_подготовки.[Станд])='" + PL.Standart + "')); ";
- //           var code = command.ExecuteScalar();
- //           reader.Close();
+            PL.DistCount = 0;
+            PL.ProgressBarMaxCount = 0;
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            // запись в таблицу профиль
+            command.CommandText = "INSERT INTO Профиль (Название_профиля) VALUES ('" + PL.Profile + "');";
+            reader = command.ExecuteReader();
+            reader.Close();
+            // берем ID из профиля
+            command.CommandText = "SELECT Профиль.Код FROM Профиль WHERE (((Профиль.[Название_профиля])='" + PL.Profile + "')); ";
+            var code_profile = command.ExecuteScalar();
+            reader.Close();
+            command.CommandText = "INSERT INTO Направление_подготовки (Код_профиля, Направление_подготовки, Станд) VALUES ('" + code_profile + "','" + PL.Napr + "','" + PL.Standart + "');";
+            reader = command.ExecuteReader();
+            reader.Close();
+            // получаем id из Направление_подготовки для записи в Дисциплины_профиля
+            command.CommandText = "SELECT Направление_подготовки.Код FROM Направление_подготовки WHERE (((Направление_подготовки.[Направление_подготовки])='" + PL.Napr + "') AND ((Направление_подготовки.[Код_профиля])=" + code_profile + ") AND ((Направление_подготовки.[Станд])='" + PL.Standart + "')); ";
+            var code = command.ExecuteScalar();
+            reader.Close();
 
- //           for (int i = 0; i <= PLtime.Length - 1; i++)
- //           {
- //               if (PLtime[i].Naim != null)
- //               {
- //                   command.CommandText = "INSERT INTO Дисциплины_профиля (Код_профиля,Дисциплины,Индекс,Факт_по_зет,По_плану,Контакт_часы,Аудиторные,Самостоятельная_работа,Контроль,Элект_часы,Интер_часы) VALUES ('" + code + "','" + PLtime[i].Naim + "','" + PLtime[i].Index + "','" + PLtime[i].Fact + "','" + PLtime[i].AtPlan + "','" + PLtime[i].ContactHours + "','" + PLtime[i].Aud + "','" + PLtime[i].SR + "','" + PLtime[i].Contr + "','" + PLtime[i].ElectHours + "','" + PLtime[i].InterHours + "');";
- //                   reader = command.ExecuteReader();
- //                   reader.Close();
- //                    //получаем ID дисциплины которую записали
- //                   command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_профиля)=" + code + ") AND ((Дисциплины_профиля.Дисциплины)='" + PLtime[i].Naim + "'));";
- //                   var code_distip = command.ExecuteScalar();
- //                   reader.Close();
- //                   int t; // прохождение по симестрам
- //                   for (t = 0; t <= 9; t++)
- //                   {
- //                       if (PLtime[i].Dif_Zachet[t] == true || PLtime[i].Zachet[t] == true || PLtime[i].Examen[t] == true)
- //                       {
- //                           int nomer_sem = t + 1;
- //                           command.CommandText = "INSERT INTO Семестр (Номер_семестра,ZET,Лек,Лек_инт,ПР,Лаб,Лаб_инт,ПР_инт,Элек,СР,Часы_конт,Часы_конт_электр,Курсовая,Итого,Код_дисциплины,Экзамен,Зачет,Зачет_с_оценкой) VALUES ('" + nomer_sem + "','" + PLtime[i].ZET[t] + "','" + PLtime[i].Lekc[t] + "','" + PLtime[i].LekcInter[t] + "','" + PLtime[i].Practice[t] + "','" + PLtime[i].Lab[t] + "','" + PLtime[i].LabInter[t] + "','" + PLtime[i].PractInter[t] + "','" + PLtime[i].Elect[t] + "','" + PLtime[i]._SR[t] + "','" + PLtime[i].HoursCont[t] + "','" + PLtime[i].HoursContElect[t] + "','" + PLtime[i].KR + "','" + PLtime[i].Itogo[t] + "','" + code_distip + "'," + PLtime[i].Examen[t] + "," + PLtime[i].Zachet[t] + "," + PLtime[i].Dif_Zachet[t] +");";
- //                           reader = command.ExecuteReader();
- //                           reader.Close();
- //                       }
- //                   }
- //               }
- //           }
+            for (int i = 0; i <= PLtime.Length - 1; i++)
+            {
+                if (PLtime[i].Naim != null)
+                {
+                    command.CommandText = "INSERT INTO Дисциплины_профиля (Код_направления_подготовки,Дисциплины,Индекс,Факт_по_зет,По_плану,Контакт_часы,Аудиторные,Самостоятельная_работа,Контроль,Элект_часы,Интер_часы,Код_профиля) VALUES ('" + code + "','" + PLtime[i].Naim + "','" + PLtime[i].Index + "','" + PLtime[i].Fact + "','" + PLtime[i].AtPlan + "','" + PLtime[i].ContactHours + "','" + PLtime[i].Aud + "','" + PLtime[i].SR + "','" + PLtime[i].Contr + "','" + PLtime[i].ElectHours + "','" + PLtime[i].InterHours + "'," + code_profile + ");";
+                    reader = command.ExecuteReader();
+                    reader.Close();
+                    //получаем ID дисциплины которую записали
+                    command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_направления_подготовки)=" + code + ") AND ((Дисциплины_профиля.Дисциплины)='" + PLtime[i].Naim + "'));";
+                    var code_distip = command.ExecuteScalar();
+                    reader.Close();
+                    int t; // прохождение по симестрам
+                    for (t = 0; t <= 9; t++)
+                    {
+                        if (PLtime[i].Dif_Zachet[t] == true || PLtime[i].Zachet[t] == true || PLtime[i].Examen[t] == true)
+                        {
+                            int nomer_sem = t + 1;
+                            command.CommandText = "INSERT INTO Семестр (Номер_семестра,ZET,Лек,Лек_инт,ПР,Лаб,Лаб_инт,ПР_инт,Элек,СР,Часы_конт,Часы_конт_электр,Курсовая,Итого,Код_дисциплины,Экзамен,Зачет,Зачет_с_оценкой) VALUES ('" + nomer_sem + "','" + PLtime[i].ZET[t] + "','" + PLtime[i].Lekc[t] + "','" + PLtime[i].LekcInter[t] + "','" + PLtime[i].Practice[t] + "','" + PLtime[i].Lab[t] + "','" + PLtime[i].LabInter[t] + "','" + PLtime[i].PractInter[t] + "','" + PLtime[i].Elect[t] + "','" + PLtime[i]._SR[t] + "','" + PLtime[i].HoursCont[t] + "','" + PLtime[i].HoursContElect[t] + "','" + PLtime[i].KR + "','" + PLtime[i].Itogo[t] + "','" + code_distip + "'," + PLtime[i].Examen[t] + "," + PLtime[i].Zachet[t] + "," + PLtime[i].Dif_Zachet[t] + ");";
+                            reader = command.ExecuteReader();
+                            reader.Close();
+                        }
+                    }
+                }
+            }
 
- ////           Action action3 = () => { textBox3.Text += PL.VidActive[1]; }; Invoke(action3);
- //           for (int i = 0; i <= PL.VidActive.Count - 1; i++)
- //           {
- //               command.CommandText = "INSERT INTO Виды_дейтельности (Список_дейтельности,Код_направления_подготовки) VALUES ('" + PL.VidActive[i] + "','" + code + "');";
- //               reader = command.ExecuteReader();
- //               reader.Close();
+            //           Action action3 = () => { textBox3.Text += PL.VidActive[1]; }; Invoke(action3);
+            for (int i = 0; i <= PL.VidActive.Count - 1; i++)
+            {
+                command.CommandText = "INSERT INTO Виды_дейтельности (Список_дейтельности,Код_направления_подготовки) VALUES ('" + PL.VidActive[i] + "','" + code + "');";
+                reader = command.ExecuteReader();
+                reader.Close();
 
- //           }
+            }
             Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока
             StartEndDist();
             BeforeAndAfterDis();
