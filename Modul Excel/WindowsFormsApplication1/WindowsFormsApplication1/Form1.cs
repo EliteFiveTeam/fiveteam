@@ -23,14 +23,28 @@ namespace WindowsFormsApplication1
         public string Profile; // Профиль дисциплины 
         public string Standart; // Стандарт дисциплины
         public List<string> VidActive; // Список видов деятельности
+        public List<string> OriginalCompet;
+        public List<string> InfoCompet;
+
+
 
         public void CreateList() 
         {
             VidActive = new List<string>();
+            OriginalCompet = new List<string>();
+            InfoCompet = new List<string>();
         } // Объявления списка (ВД)
         public void MyList(string Val)
         {
             VidActive.Add(Val); 
+        } // Add to List (ВД)
+        public void _OriginalCompet(string Val)
+        {
+            OriginalCompet.Add(Val);
+        } // Add to List (ВД)
+        public void _InfoCompet(string Val)
+        {
+            InfoCompet.Add(Val);
         } // Add to List (ВД)
         
     }
@@ -398,6 +412,21 @@ namespace WindowsFormsApplication1
             //textBox2.Text = textBox2.Text + PL.Napr + Environment.NewLine + PL.Profile + Environment.NewLine + PL.Standart + Environment.NewLine;
 
 
+
+            /* Считывания информации с листа "Компетенции" */
+
+            excelworksheet = (excel.Worksheet)excelsheets.get_Item("Компетенции");
+            for (int a = 3; a <= 400; a++)
+            {
+                if (excelworksheet.Cells[a, 2].Text != "")
+                {
+                    string Compet = excelworksheet.Cells[a, 2].Text;
+                    string Info = excelworksheet.Cells[a, 4].Text;
+                    PL._OriginalCompet(Compet.Trim());
+                    PL._InfoCompet(Info.Trim());
+                }
+            }
+          
             /* Считывания информации с листа "План" */
 
 
@@ -405,6 +434,7 @@ namespace WindowsFormsApplication1
             excelworksheet = (excel.Worksheet)excelsheets.get_Item("План");
             string PlanSheet1 = excelworksheet.Cells[6, 3].Text; // обращение к ячейкам книги "Список дисциплин"
             int ND = 0;
+
             /////////////////////////////////////////////////////////////////////
             for (int d = 6; d <= 140; d++)
             {
@@ -416,8 +446,6 @@ namespace WindowsFormsApplication1
                     PL.DistCount++;
                 }
             }
-
-
             ////////////////////////////////////////////////////////////////
 
             for (int j = 6; j <= 150; j++)
@@ -712,10 +740,15 @@ namespace WindowsFormsApplication1
                 Action action2 = () => { progressBar1.Maximum = PL.DistCount; progressBar1.Value = ND; }; Invoke(action2);
                 
             }
-            StartEndDist();
-            BeforeAndAfterDis();
-            Print();
+
+            StartEndDist(); // определения начало и конца дисцип
+            BeforeAndAfterDis(); // анализ дисц ПОСЛЕ и ДО
+            //Print(); вывод дисциплин ДО и ПОСЛЕ
             PL.DistCount = 0;
+
+            
+            /* Заполнение инфррмации в БАЗУ ДАННЫХ */ 
+
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
             OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
             con.Open();
