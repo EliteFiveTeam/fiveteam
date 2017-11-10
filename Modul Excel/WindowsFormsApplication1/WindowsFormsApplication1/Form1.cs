@@ -272,22 +272,22 @@ namespace WindowsFormsApplication1
             return flag;
         }
 
-        private void Print() // вывод на экран для проверки 
-        {
-            for (int i = 0; i <= PL.DistCount - 1; i++)
-            {
-                Action action5 = () => { textBox2.Text += PLtime[i].Naim + Environment.NewLine; }; Invoke(action5);
+        //private void Print() // вывод на экран для проверки 
+        //{
+        //    for (int i = 0; i <= PL.DistCount - 1; i++)
+        //    {
+        //        Action action5 = () => { textBox2.Text += PLtime[i].Naim + Environment.NewLine; }; Invoke(action5);
                 
-                for (int k = 0; k <= PLtime[i].PreDis.Count - 1; k++)
-                    {  Action action7 = () => { textBox2.Text += " | Дисциплина до |" + " " + PLtime[i].PreDis[k] + " "  + Environment.NewLine; }; Invoke(action7); }
-                for (int j = 0; j <= PLtime[i].AfterDis.Count - 1; j++)
-                {
-                    Action action8 = () => { textBox2.Text += " | Дисциплина после |" + " " + PLtime[i].AfterDis[j] + Environment.NewLine; }; Invoke(action8); 
-                }  
+        //        for (int k = 0; k <= PLtime[i].PreDis.Count - 1; k++)
+        //            {  Action action7 = () => { textBox2.Text += " | Дисциплина до |" + " " + PLtime[i].PreDis[k] + " "  + Environment.NewLine; }; Invoke(action7); }
+        //        for (int j = 0; j <= PLtime[i].AfterDis.Count - 1; j++)
+        //        {
+        //            Action action8 = () => { textBox2.Text += " | Дисциплина после |" + " " + PLtime[i].AfterDis[j] + Environment.NewLine; }; Invoke(action8); 
+        //        }  
                     
                 
-            }
-        }
+        //    }
+        //}
 
         private void AnalysisDataExcel()
         {
@@ -312,6 +312,20 @@ namespace WindowsFormsApplication1
                 {
                 string Open2Sheet = excelworksheet.Cells[i, 18].Text;
                 PL.Standart = Open2Sheet.Trim();
+                if (PL.Standart != null && PL.Standart != "")
+                {
+                    Action Progress = () => { richTextBox1.Text += "Стандарт профиля загружен" + Environment.NewLine; }; Invoke(Progress);
+                }
+                else
+                {
+                    Action Progress = () =>
+                    {
+
+                        richTextBox1.Text += "Стандарт профиля не найден!" + Environment.NewLine;
+                        richTextBox1.Select(richTextBox1.Text.IndexOf("Стандарт профиля не найден!"), "Стандарт профиля не найден!".Length);
+                        richTextBox1.SelectionColor = Color.Red;
+                    }; Invoke(Progress);
+                }
                 }
                 
             }
@@ -367,8 +381,21 @@ namespace WindowsFormsApplication1
                 i1 = Open1Sheet.LastIndexOf("\"");
                 string STRProf = Open1Sheet.Substring(i2 + 1, i1 - i2 - 1);
                 ExcelApp.Visible = false;
-                //textBox1.Text = textBox1.Text + Open1Sheet + " " + STRProf  +  Environment.NewLine + Open2Sheet;
+                
                 PL.Napr = STRNapr.Trim();
+                if (PL.Napr != null && PL.Napr != "")
+                {
+                    Action Progress = () =>
+                    {
+                        richTextBox1.Text += "Направление профиля загружено" + Environment.NewLine;
+                        richTextBox1.Select(richTextBox1.Text.IndexOf("Направление профиля загружено"), "Направление профиля загружено".Length);
+                        richTextBox1.SelectionColor = Color.Black;
+                    }; Invoke(Progress);
+                }
+                else 
+                {
+                    Action Progress = () => { richTextBox1.Text += "Направление профиля не найдено!"; }; Invoke(Progress);
+                }
                 PL.Profile = STRProf.Trim();
 
             }
@@ -738,9 +765,9 @@ namespace WindowsFormsApplication1
 
                 }
                 Action action2 = () => { progressBar1.Maximum = PL.DistCount; progressBar1.Value = ND; }; Invoke(action2);
-                
+               
             }
-
+            ExcelApp.Quit();
             StartEndDist(); // определения начало и конца дисцип
             BeforeAndAfterDis(); // анализ дисц ПОСЛЕ и ДО
             //Print(); вывод дисциплин ДО и ПОСЛЕ
@@ -768,6 +795,14 @@ namespace WindowsFormsApplication1
             command.CommandText = "SELECT Направление_подготовки.Код FROM Направление_подготовки WHERE (((Направление_подготовки.[Направление_подготовки])='" + PL.Napr + "') AND ((Направление_подготовки.[Код_профиля])=" + code_profile + ") AND ((Направление_подготовки.[Станд])='" + PL.Standart + "')); ";
             var code = command.ExecuteScalar();
             reader.Close();
+            //компетенции с листа компетенции 
+            for (int y = 0; y <= PL.OriginalCompet.Count - 1; y++)
+            {
+                command.CommandText = "INSERT INTO Компетенции (Код_направления,Содержание,Компетенция) VALUES ('" + code + "','" + PL.InfoCompet[y] + "','" + PL.OriginalCompet[y] + "');";
+                reader = command.ExecuteReader();
+                reader.Close();
+            }
+
 
             for (int i = 0; i <= PLtime.Length - 1; i++)
             {
@@ -781,18 +816,18 @@ namespace WindowsFormsApplication1
                     var code_distip = command.ExecuteScalar();
                     reader.Close();
                     //компетенции
-                    for (int y = 0; y <= PLtime[i].Compet.Count - 1 ; y++)
-                    {
-                        // 
-                        command.CommandText = "INSERT INTO Компетенция (Код_направления,Код_дисциплины,Компетенция) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].Compet[y] + "');";
-                        reader = command.ExecuteReader();
-                        reader.Close(); 
-                    }
+                    //for (int y = 0; y <= PLtime[i].Compet.Count - 1 ; y++)
+                    //{
+                    //    // 
+                    //    command.CommandText = "INSERT INTO Компетенция (Код_направления,Код_дисциплины,Компетенция) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].Compet[y] + "');";
+                    //    reader = command.ExecuteReader();
+                    //    reader.Close(); 
+                    //}
                     //дисциплины до
                     for (int y1 = 0; y1 <= PLtime[i].PreDis.Count - 1; y1++)
                     {
                         // 
-                        command.CommandText = "INSERT INTO Дисциплина_до (Код_направление_подготовки,Код_дисциплины,Дисциплина_до) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].PreDis[y1] + "');";
+                        command.CommandText = "INSERT INTO Дисциплина_до (Код_дисциплины,Дисциплина_до) VALUES ('" + code_distip + "','" + PLtime[i].PreDis[y1] + "');";
                         reader = command.ExecuteReader();
                         reader.Close();
                     }
@@ -800,7 +835,7 @@ namespace WindowsFormsApplication1
                     for (int y2 = 0; y2 <= PLtime[i].AfterDis.Count - 1; y2++)
                     {
                         // 
-                        command.CommandText = "INSERT INTO Дисциплина_после (Код_направление_подготовки,Код_дисциплины,Дисциплина_после) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].AfterDis[y2] + "');";
+                        command.CommandText = "INSERT INTO Дисциплина_после (Код_дисциплины,Дисциплина_после) VALUES ('" + code_distip + "','" + PLtime[i].AfterDis[y2] + "');";
                         reader = command.ExecuteReader();
                         reader.Close();
                     }
