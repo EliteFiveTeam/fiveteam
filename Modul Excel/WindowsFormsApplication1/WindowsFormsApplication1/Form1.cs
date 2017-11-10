@@ -815,14 +815,17 @@ namespace WindowsFormsApplication1
                     command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_направления_подготовки)=" + code + ") AND ((Дисциплины_профиля.Дисциплины)='" + PLtime[i].Naim + "'));";
                     var code_distip = command.ExecuteScalar();
                     reader.Close();
-                    //компетенции
-                    //for (int y = 0; y <= PLtime[i].Compet.Count - 1 ; y++)
-                    //{
-                    //    // 
-                    //    command.CommandText = "INSERT INTO Компетенция (Код_направления,Код_дисциплины,Компетенция) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].Compet[y] + "');";
-                    //    reader = command.ExecuteReader();
-                    //    reader.Close(); 
-                    //}
+                    //  подготовка к записи в таблицу компетенции_дисциплины 
+                    for (int y = 0; y <= PLtime[i].Compet.Count - 1; y++)
+                    {  //берем ID из таблицы компетенции для помещения в таблицу  компетенции_дисциплины
+                        command.CommandText = "SELECT Компетенции.Код, Компетенции.Компетенция FROM Компетенции WHERE (((Компетенции.Компетенция)='" + PLtime[i].Compet[y] + "')); ";
+                        var code_komped = command.ExecuteScalar();
+                        reader.Close();
+                        command.CommandText = "INSERT INTO Компетенции_дисциплины (Код_компетенции,Код_дисциплины) VALUES (" + code_komped + "," + code_distip + ");";
+                        reader = command.ExecuteReader();
+                        reader.Close();
+
+                    }
                     //дисциплины до
                     for (int y1 = 0; y1 <= PLtime[i].PreDis.Count - 1; y1++)
                     {
