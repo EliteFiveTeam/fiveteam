@@ -23,14 +23,28 @@ namespace WindowsFormsApplication1
         public string Profile; // Профиль дисциплины 
         public string Standart; // Стандарт дисциплины
         public List<string> VidActive; // Список видов деятельности
+        public List<string> OriginalCompet;
+        public List<string> InfoCompet;
+
+
 
         public void CreateList() 
         {
             VidActive = new List<string>();
+            OriginalCompet = new List<string>();
+            InfoCompet = new List<string>();
         } // Объявления списка (ВД)
         public void MyList(string Val)
         {
             VidActive.Add(Val); 
+        } // Add to List (ВД)
+        public void _OriginalCompet(string Val)
+        {
+            OriginalCompet.Add(Val);
+        } // Add to List (ВД)
+        public void _InfoCompet(string Val)
+        {
+            InfoCompet.Add(Val);
         } // Add to List (ВД)
         
     }
@@ -258,22 +272,22 @@ namespace WindowsFormsApplication1
             return flag;
         }
 
-        private void Print() // вывод на экран для проверки 
-        {
-            for (int i = 0; i <= PL.DistCount - 1; i++)
-            {
-                Action action5 = () => { textBox2.Text += PLtime[i].Naim + Environment.NewLine; }; Invoke(action5);
+        //private void Print() // вывод на экран для проверки 
+        //{
+        //    for (int i = 0; i <= PL.DistCount - 1; i++)
+        //    {
+        //        Action action5 = () => { textBox2.Text += PLtime[i].Naim + Environment.NewLine; }; Invoke(action5);
                 
-                for (int k = 0; k <= PLtime[i].PreDis.Count - 1; k++)
-                    {  Action action7 = () => { textBox2.Text += " | Дисциплина до |" + " " + PLtime[i].PreDis[k] + " "  + Environment.NewLine; }; Invoke(action7); }
-                for (int j = 0; j <= PLtime[i].AfterDis.Count - 1; j++)
-                {
-                    Action action8 = () => { textBox2.Text += " | Дисциплина после |" + " " + PLtime[i].AfterDis[j] + Environment.NewLine; }; Invoke(action8); 
-                }  
+        //        for (int k = 0; k <= PLtime[i].PreDis.Count - 1; k++)
+        //            {  Action action7 = () => { textBox2.Text += " | Дисциплина до |" + " " + PLtime[i].PreDis[k] + " "  + Environment.NewLine; }; Invoke(action7); }
+        //        for (int j = 0; j <= PLtime[i].AfterDis.Count - 1; j++)
+        //        {
+        //            Action action8 = () => { textBox2.Text += " | Дисциплина после |" + " " + PLtime[i].AfterDis[j] + Environment.NewLine; }; Invoke(action8); 
+        //        }  
                     
                 
-            }
-        }
+        //    }
+        //}
 
         private void AnalysisDataExcel()
         {
@@ -298,6 +312,20 @@ namespace WindowsFormsApplication1
                 {
                 string Open2Sheet = excelworksheet.Cells[i, 18].Text;
                 PL.Standart = Open2Sheet.Trim();
+                if (PL.Standart != null && PL.Standart != "")
+                {
+                    Action Progress = () => { richTextBox1.Text += "Стандарт профиля загружен" + Environment.NewLine; }; Invoke(Progress);
+                }
+                else
+                {
+                    Action Progress = () =>
+                    {
+
+                        richTextBox1.Text += "Стандарт профиля не найден!" + Environment.NewLine;
+                        richTextBox1.Select(richTextBox1.Text.IndexOf("Стандарт профиля не найден!"), "Стандарт профиля не найден!".Length);
+                        richTextBox1.SelectionColor = Color.Red;
+                    }; Invoke(Progress);
+                }
                 }
                 
             }
@@ -353,8 +381,21 @@ namespace WindowsFormsApplication1
                 i1 = Open1Sheet.LastIndexOf("\"");
                 string STRProf = Open1Sheet.Substring(i2 + 1, i1 - i2 - 1);
                 ExcelApp.Visible = false;
-                //textBox1.Text = textBox1.Text + Open1Sheet + " " + STRProf  +  Environment.NewLine + Open2Sheet;
+                
                 PL.Napr = STRNapr.Trim();
+                if (PL.Napr != null && PL.Napr != "")
+                {
+                    Action Progress = () =>
+                    {
+                        richTextBox1.Text += "Направление профиля загружено" + Environment.NewLine;
+                        richTextBox1.Select(richTextBox1.Text.IndexOf("Направление профиля загружено"), "Направление профиля загружено".Length);
+                        richTextBox1.SelectionColor = Color.Black;
+                    }; Invoke(Progress);
+                }
+                else 
+                {
+                    Action Progress = () => { richTextBox1.Text += "Направление профиля не найдено!"; }; Invoke(Progress);
+                }
                 PL.Profile = STRProf.Trim();
 
             }
@@ -398,6 +439,21 @@ namespace WindowsFormsApplication1
             //textBox2.Text = textBox2.Text + PL.Napr + Environment.NewLine + PL.Profile + Environment.NewLine + PL.Standart + Environment.NewLine;
 
 
+
+            /* Считывания информации с листа "Компетенции" */
+
+            excelworksheet = (excel.Worksheet)excelsheets.get_Item("Компетенции");
+            for (int a = 3; a <= 400; a++)
+            {
+                if (excelworksheet.Cells[a, 2].Text != "")
+                {
+                    string Compet = excelworksheet.Cells[a, 2].Text;
+                    string Info = excelworksheet.Cells[a, 4].Text;
+                    PL._OriginalCompet(Compet.Trim());
+                    PL._InfoCompet(Info.Trim());
+                }
+            }
+          
             /* Считывания информации с листа "План" */
 
 
@@ -405,6 +461,7 @@ namespace WindowsFormsApplication1
             excelworksheet = (excel.Worksheet)excelsheets.get_Item("План");
             string PlanSheet1 = excelworksheet.Cells[6, 3].Text; // обращение к ячейкам книги "Список дисциплин"
             int ND = 0;
+
             /////////////////////////////////////////////////////////////////////
             for (int d = 6; d <= 140; d++)
             {
@@ -416,8 +473,6 @@ namespace WindowsFormsApplication1
                     PL.DistCount++;
                 }
             }
-
-
             ////////////////////////////////////////////////////////////////
 
             for (int j = 6; j <= 150; j++)
@@ -710,11 +765,17 @@ namespace WindowsFormsApplication1
 
                 }
                 Action action2 = () => { progressBar1.Maximum = PL.DistCount; progressBar1.Value = ND; }; Invoke(action2);
-                
+               
             }
-            
+            ExcelApp.Quit();
+            StartEndDist(); // определения начало и конца дисцип
+            BeforeAndAfterDis(); // анализ дисц ПОСЛЕ и ДО
+            //Print(); вывод дисциплин ДО и ПОСЛЕ
             PL.DistCount = 0;
-            PL.ProgressBarMaxCount = 0;
+
+            
+            /* Заполнение инфррмации в БАЗУ ДАННЫХ */ 
+
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
             OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
             con.Open();
@@ -734,6 +795,14 @@ namespace WindowsFormsApplication1
             command.CommandText = "SELECT Направление_подготовки.Код FROM Направление_подготовки WHERE (((Направление_подготовки.[Направление_подготовки])='" + PL.Napr + "') AND ((Направление_подготовки.[Код_профиля])=" + code_profile + ") AND ((Направление_подготовки.[Станд])='" + PL.Standart + "')); ";
             var code = command.ExecuteScalar();
             reader.Close();
+            //компетенции с листа компетенции 
+            for (int y = 0; y <= PL.OriginalCompet.Count - 1; y++)
+            {
+                command.CommandText = "INSERT INTO Компетенции (Код_направления,Содержание,Компетенция) VALUES ('" + code + "','" + PL.InfoCompet[y] + "','" + PL.OriginalCompet[y] + "');";
+                reader = command.ExecuteReader();
+                reader.Close();
+            }
+
 
             for (int i = 0; i <= PLtime.Length - 1; i++)
             {
@@ -746,6 +815,30 @@ namespace WindowsFormsApplication1
                     command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_направления_подготовки)=" + code + ") AND ((Дисциплины_профиля.Дисциплины)='" + PLtime[i].Naim + "'));";
                     var code_distip = command.ExecuteScalar();
                     reader.Close();
+                    //компетенции
+                    //for (int y = 0; y <= PLtime[i].Compet.Count - 1 ; y++)
+                    //{
+                    //    // 
+                    //    command.CommandText = "INSERT INTO Компетенция (Код_направления,Код_дисциплины,Компетенция) VALUES ('" + code + "','" + code_distip + "','" + PLtime[i].Compet[y] + "');";
+                    //    reader = command.ExecuteReader();
+                    //    reader.Close(); 
+                    //}
+                    //дисциплины до
+                    for (int y1 = 0; y1 <= PLtime[i].PreDis.Count - 1; y1++)
+                    {
+                        // 
+                        command.CommandText = "INSERT INTO Дисциплина_до (Код_дисциплины,Дисциплина_до) VALUES ('" + code_distip + "','" + PLtime[i].PreDis[y1] + "');";
+                        reader = command.ExecuteReader();
+                        reader.Close();
+                    }
+                    //дисциплины после
+                    for (int y2 = 0; y2 <= PLtime[i].AfterDis.Count - 1; y2++)
+                    {
+                        // 
+                        command.CommandText = "INSERT INTO Дисциплина_после (Код_дисциплины,Дисциплина_после) VALUES ('" + code_distip + "','" + PLtime[i].AfterDis[y2] + "');";
+                        reader = command.ExecuteReader();
+                        reader.Close();
+                    }
                     int t; // прохождение по симестрам
                     for (t = 0; t <= 9; t++)
                     {
@@ -769,9 +862,7 @@ namespace WindowsFormsApplication1
 
             }
             Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока
-            StartEndDist();
-            BeforeAndAfterDis();
-            Print();
+
         }
 
        
