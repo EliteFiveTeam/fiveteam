@@ -39,18 +39,22 @@ namespace WindowsFormsApplication1
     
     public partial class Form1 : Form
     {
+        
+        public static bool btn1; 
         Tema tems;
         Discipline dis;
         public Dis D = new Dis(); /*Класс*/
         char[] MyChar = { '\f', '\n', '\r', '\t', '\v', '\0', ' ', '2', '3', '.', ')', ';' };
         int CountKFind;  //' счетчик найденных фрагментов, n-сколько надо отсчитать нахождений до нужного
         word.Application WordApp;
+        private int sec; // переменная, содержащая значение времени
         public Form1()
         {
             InitializeComponent();
+            sec = 0; // начальное значение времени
         }
     
-        public string SearchText(string wordText1, string wordText2, int nf) // Поиск между двумя фрагментами - главный метод 
+        public string SearchText(string wordText1, string wordText2, int nf) // Поиск между двумя фрагментами - метод поиска 
         {
             Microsoft.Office.Interop.Word.Range r;//Range
             string st;
@@ -89,11 +93,13 @@ namespace WindowsFormsApplication1
                 r.End = r.End - wordText2.Length;
                 if (CountKFind >= nf) // если нужный по счету фрагмент найден
                 {
-                    r = WordApp.ActiveDocument.Range(r.Start, r.End);
+                   // r = WordApp.ActiveDocument.Range(r.Start, r.End);
+                    break;
                 }
             }
-            if (CountKFind == 0)
-            {
+
+            CountKFind = 0;
+            
                 if (r.Text != "")
                 {
                     if (st != "")
@@ -111,65 +117,31 @@ namespace WindowsFormsApplication1
                         Clipboard.Clear();
                     }
                 }
-            }
+            
             return st;
         }
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-
-        private void button1_Click(object sender, EventArgs e) // Метод, открывающий ворд документ
+        private void AnalysisOldProgramm()
         {
-            string Filename_; 
+            string Filename_;
             WordApp = new word.Application(); // создаем объект word;
             WordApp.Visible = true; // показывает или скрывает файл word;
-            openFileDialog1.ShowDialog();
+            Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);
+            //openFileDialog1.ShowDialog();
             openFileDialog1.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx"; // фильтрует, оставляя только ворд файлы
             Filename_ = openFileDialog1.FileName;
             WordApp.Documents.Add(Filename_);// загружаем в word файл с рабочей книгой 
+            button1.Enabled = false; // отключает кнопку на 2 секунды, согласно таймеру
+            timer1.Start();
 
-            //Thread theard = new Thread(SearchText); //второй поток для 
-            //theard.Start();
-            //Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);  // Запуск главного потока 
-        } 
-            
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e) // Кнопка создания новой рабочей программы
-        {
-        } 
-
-        private void button3_Click(object sender, EventArgs e)
-        { 
-        } // бесполезная кнопка.
-
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e) // Основная кнопка поиска
-        {
-            
             Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока 
-            
+
             SearchText(textBox2.Text, textBox4.Text, CountKFind);
             int N = 0;
             int i = 0;
-            int j = 0;
+            //int j = 0;
             Microsoft.Office.Interop.Word.Range r;//Range
             Microsoft.Office.Interop.Word.ListParagraphs p;
             D.CreateLitera();
@@ -179,6 +151,7 @@ namespace WindowsFormsApplication1
             p = WordApp.ActiveDocument.ListParagraphs;
             word.Document document = WordApp.ActiveDocument;
             int NnN = document.ListParagraphs.Count;
+
             //Поиск литературы
             string str1 = "Основная литература";
             string str2 = "Дополнительная литература";
@@ -191,20 +164,29 @@ namespace WindowsFormsApplication1
             string f1 = r.Find.Text;
             r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
             r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-            
+
             if (r.Find.Execute(f1))// Проверка поиска, если нашёл фрагменты, то...
             {
-                
-
                 gg1 = WordApp.ActiveDocument.Range(r.Start + str1.Length, r.End - str2.Length).Text; //убираем кл.
                 r.Start = r.Start + str1.Length;
                 r.End = r.End - str2.Length;
                 int m21 = r.ListParagraphs.Count;
-                for (int y = 1; y <= r.ListParagraphs.Count;  y++)
+                if (m21 == 0)
                 {
-                    string dfs = r.ListParagraphs[y].Range.Text;
-                    D.MyListAdd(dfs, false);
-                    richTextBox4.Text = richTextBox4.Text + D.LiteraBasic[y-1];
+                    richTextBox2.Text = "Основная литература не найдена!";
+                }
+                else
+                {
+                    object Start = r.ListParagraphs[1].Range.Start;
+                    object End = r.ListParagraphs[m21].Range.End;
+                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                    myRange.Copy();
+                    richTextBox4.Paste();
+                    for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                    {
+                        string dfs = r.ListParagraphs[y].Range.Text;
+                        D.MyListAdd(dfs, false);
+                    }
                 }
             }
             // поиск дополнительной литературы
@@ -215,19 +197,30 @@ namespace WindowsFormsApplication1
             r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
             if (r.Find.Execute(f2))// Проверка поиска, если нашёл фрагменты, то...
             {
-                
 
                 gg2 = WordApp.ActiveDocument.Range(r.Start + str2.Length, r.End - str3.Length).Text; //убираем кл.
                 r.Start = r.Start + str2.Length;
                 r.End = r.End - str3.Length;
                 int m12 = r.ListParagraphs.Count;
-                for (int x = 1; x <= r.ListParagraphs.Count; x++)
+                if (m12 == 0)
                 {
-                    string dsf = r.ListParagraphs[x].Range.Text;
-                    D.MyListAdd(dsf, true);
-                    richTextBox5.Text = richTextBox5.Text + D.LiteraAdditional[x-1];
+                    richTextBox2.Text = "Дополнительная литература не найдена!";
+                }
+                else
+                {
+                    object Start = r.ListParagraphs[1].Range.Start;
+                    object End = r.ListParagraphs[m12].Range.End;
+                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                    myRange.Copy();
+                    richTextBox5.Paste();
+                    for (int x = 1; x <= r.ListParagraphs.Count; x++)
+                    {
+                        string dsf = r.ListParagraphs[x].Range.Text;
+                        D.MyListAdd(dsf, true);
+                    }
                 }
             } // поиск закончился, литература записана в массив
+
 
             //находим цели дисциплины
             if (ss == "") //' Если цели не попали в оглавление
@@ -235,82 +228,83 @@ namespace WindowsFormsApplication1
                 ss = SearchText("явля?????", "Учебные задачи дисциплины", 2); // искомый текст после оглавления
             }
 
-                ss = ss.TrimEnd(MyChar);
-                N = ss.IndexOf("явля");
-                if (N > 0 && N < ss.Length - 9)
+            ss = ss.TrimEnd(MyChar);
+            N = ss.IndexOf("явля");
+            if (N > 0 && N < ss.Length - 9)
+            {
+                D.Cel = ss.Remove(1, N + 9);
+            }
+            else
+            {
+                D.Cel = ss;// записали переменную цель
+            }
+
+
+
+            //' Находим задачи и оставляем все после слова "является" или "являются:"
+            ss = SearchText("Учебные задачи дисциплины", "Место дисциплины", 2);
+            if (ss == "")// ' Если задачи не попали в оглавление
+            {
+                ss = SearchText("Учебные задачи дисциплины", "Место дисциплины", 1);
+            }
+
+            ss = ss.TrimEnd(MyChar);
+            N = ss.IndexOf("явля");
+
+            if (N > 0 && N < ss.Length - 9)
+            {
+                D.Tasks = ss.Remove(1, N + 9);
+            }
+            else
+            {
+                D.Tasks = ss; // записали цели
+            }
+            //Находим знания, умения и владения и оставляем все до знаков препинания и символов перевода, или цифр 2, 3.
+            ss = SearchText("Знать:", "Уметь:", 1);
+            D.Zn_before = ss.TrimEnd(MyChar);
+            ss = SearchText("Уметь:", "Владеть:", 1);
+            D.Um_before = ss.TrimEnd(MyChar);
+            ss = SearchText("Владеть:", ".", 1);
+            D.Vl_before = ss.TrimEnd(MyChar);
+            ss = SearchText("Знать:", "Уметь:", 2);
+            D.Zn_after = ss.TrimEnd(MyChar);
+            ss = SearchText("Уметь:", "Владеть:", 2);
+            D.Um_after = ss.TrimEnd(MyChar);
+            ss = SearchText("Владеть:", ".", 2);
+            D.Vl_after = ss.TrimEnd(MyChar);
+            byte razd = 1;  //'номер раздела
+            int CountTems = 0;
+            for (i = 2; i <= WordApp.ActiveDocument.Tables[2].Rows.Count; i++)
+            {
+                if (WordApp.ActiveDocument.Tables[2].Rows[i].Cells.Count >= 5)
                 {
-                    D.Cel = ss.Remove(1, N + 9);
+                    D.tems[i - 2].Name = WordApp.ActiveDocument.Tables[2].Cell(i, 2).Range.Text;
+                    D.tems[i - 2].Text = WordApp.ActiveDocument.Tables[2].Cell(i, 3).Range.Text;
+                    D.tems[i - 2].Rez = WordApp.ActiveDocument.Tables[2].Cell(i, 5).Range.Text;
+                    D.tems[i - 2].FormZ = WordApp.ActiveDocument.Tables[2].Cell(i, 6).Range.Text;
+                    CountTems++;
+
+                    //richTextBox2.Text = richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ;
+                    //Clipboard.SetText(richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ);
+
+
                 }
                 else
                 {
-                    D.Cel = ss;// записали переменную цель
+                    if (i != 2)
+                    {
+                        razd += razd;  //' счетчик разделов срабатывает если их больше одного
+                    }
                 }
-
-            
-        
-        //' Находим задачи и оставляем все после слова "является" или "являются:"
-        ss = SearchText("Учебные задачи дисциплины", "Место дисциплины", 2);
-        if (ss == "")// ' Если задачи не попали в оглавление
-        {
-            ss = SearchText("Учебные задачи дисциплины", "Место дисциплины", 1);
-        }
-        
-        ss = ss.TrimEnd(MyChar);
-        N = ss.IndexOf("явля");
-        
-        if (N > 0 && N < ss.Length - 9) 
-    {
-        D.Tasks = ss.Remove(1, N + 9);        
-    }
-        else
-        {
-            D.Tasks = ss; // записали цели
-        }
-            //Находим знания, умения и владения и оставляем все до знаков препинания и символов перевода, или цифр 2, 3.
-            ss = SearchText("Знать:", "Уметь:", 1);
-        D.Zn_before = ss.TrimEnd(MyChar);
-        ss = SearchText("Уметь:", "Владеть:", 1);
-        D.Um_before = ss.TrimEnd(MyChar);
-        ss = SearchText("Владеть:", ".", 1);
-        D.Vl_before = ss.TrimEnd(MyChar);
-        ss = SearchText("Знать:", "Уметь:", 2);
-        D.Zn_after = ss.TrimEnd(MyChar);
-        ss = SearchText("Уметь:", "Владеть:", 2);
-        D.Um_after = ss.TrimEnd(MyChar);
-        ss = SearchText("Владеть:", ".", 2);
-        D.Vl_after = ss.TrimEnd(MyChar);
-        byte razd = 1;  //'номер раздела
-        int CountTems = 0;
-        for (i = 2; i <= WordApp.ActiveDocument.Tables[2].Rows.Count; i++)
-        {
-            if (WordApp.ActiveDocument.Tables[2].Rows[i].Cells.Count >= 5)
-            {
-                D.tems[i - 2].Name = WordApp.ActiveDocument.Tables[2].Cell(i, 2).Range.Text;
-                D.tems[i - 2].Text = WordApp.ActiveDocument.Tables[2].Cell(i, 3).Range.Text;
-                D.tems[i - 2].Rez = WordApp.ActiveDocument.Tables[2].Cell(i, 5).Range.Text;
-                D.tems[i - 2].FormZ = WordApp.ActiveDocument.Tables[2].Cell(i, 6).Range.Text;
-                CountTems++;
-                richTextBox2.Text = richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ;
-                Clipboard.SetText(richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ);
-                
-                
             }
-            else 
-            {
-                if (i != 2) 
-                {
-                    razd += razd;  //' счетчик разделов срабатывает если их больше одного
-                }
-            }     
-        }
-        D.Nt = CountTems; //Записали количество тем в дисциплине
+            D.Nt = CountTems; //Записали количество тем в дисциплине
 
-        Clipboard.Clear();
+            Clipboard.Clear();
 
             // считываются темы и их литература, вопросы для самопроверки
-        ss = SearchText("Перечень учебно-методического обеспечения для самостоятельной работы обучающихся по дисциплине", "Материально-техническое обеспечение дисциплины", 2);
-        Clipboard.SetText(ss);
-        
+            ss = SearchText("Перечень учебно-методического обеспечения для самостоятельной работы обучающихся по дисциплине", "Материально-техническое обеспечение дисциплины", 2);
+            //Clipboard.SetText(ss);
+
             int n1, n2, n3, n4;
             n1 = ss.IndexOf("Тема");
             n2 = ss.IndexOf("Литература");
@@ -340,15 +334,14 @@ namespace WindowsFormsApplication1
                                 {
                                     richTextBox3.Text = "";
                                     richTextBox3.Paste();
-                                    if ((n1 > 0 && n1 < 100) &&(n2 > n1 && n2 < 300) && n3 > n2)  //' попытка определить что искомый фрагмент найден (он начинается со слов "Тема"
+                                    if ((n1 > 0 && n1 < 100) && (n2 > n1 && n2 < 300) && n3 > n2)  //' попытка определить что искомый фрагмент найден (он начинается со слов "Тема"
                                     {
                                         richTextBox3.Text = "";
                                         richTextBox3.Paste();
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Перечень УМО не найден");
-                                        richTextBox3.Text = "";
+                                        richTextBox2.Text = "Ошибка: Перечень УМО не найден";
                                     }
                                 }
                                 else
@@ -406,157 +399,214 @@ namespace WindowsFormsApplication1
 
             Clipboard.Clear();
             // поиск вопросов к экзаменам
-            int k, k1; // ' метки для найденных символов
+            int k; // ' метки для найденных символов
             k = richTextBox2.Find("Тема 1");
             richTextBox2.SelectAll();
-            if (k > 0) 
+            if (k > 0)
             {
                 richTextBox2.SelectedText.Remove(0, k - 1);
             }
             ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ ДЛЯ ОБУЧАЮЩИХСЯ", 2);
-            Clipboard.SetText(ss);
-        if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
-          {
-                richTextBox3.Text = "";
-                richTextBox3.Paste();
+            //Clipboard.SetText(ss);
             if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
             {
                 richTextBox3.Text = "";
                 richTextBox3.Paste();
-            
-                if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
+                if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
                 {
                     richTextBox3.Text = "";
                     richTextBox3.Paste();
+
                     if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
                     {
                         richTextBox3.Text = "";
                         richTextBox3.Paste();
                         if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
                         {
+                            richTextBox3.Text = "";
+                            richTextBox3.Paste();
+                            if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
+                            {
                                 richTextBox3.Text = "";
                                 richTextBox3.Paste();
-                            if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
-                            {
-                                    richTextBox3.Text = "";
-                                    richTextBox3.Paste();
                                 if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
                                 {
+                                    richTextBox3.Text = "";
+                                    richTextBox3.Paste();
+                                    if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
+                                    {
                                         richTextBox3.Text = "";
                                         richTextBox3.Paste();
-                                    if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
-                                    {
+                                        if (ss.Length > 500) // ' Вставка в RTB3 заданий и вопросов к экзамену
+                                        {
                                             richTextBox3.Text = "";
                                             richTextBox3.Paste();
-                                    }
+                                        }
                                         else
                                         {
-                                            MessageBox.Show("Перечень Заданий не найден!");
-                                            richTextBox3.Text = "";
+                                            richTextBox3.Text = "Ошибка:Перечень Заданий не найден!";
                                         }
+                                    }
+                                    else
+                                    {
+                                        ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "Тематический план", 1);
+                                    }
                                 }
                                 else
-                                        {
-                                        ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "Тематический план", 1);
-                                        }
+                                {
+                                    ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "Тематический план", 2);
+                                }
                             }
                             else
-                                    {
-                                    ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "Тематический план", 2);
-                                    }
-                        }
-                        else
-                                {
-                                 ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "ТЕМАТИЧЕСКИЙ ПЛАН", 1);
-                                }
-                    }
-                    else //' это для РПД образца 2015г.
                             {
-                            ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "ТЕМАТИЧЕСКИЙ ПЛАН", 2);
+                                ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "ТЕМАТИЧЕСКИЙ ПЛАН", 1);
                             }
-                }
-                else
-                        {
-                        ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 1);
                         }
-            }
-                else
-                    {
-                    ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 2);
+                        else //' это для РПД образца 2015г.
+                        {
+                            ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "ТЕМАТИЧЕСКИЙ ПЛАН", 2);
+                        }
                     }
-        }
-            else
-                {
-                ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ ДЛЯ ОБУЧАЮЩИХСЯ", 1);
+                    else
+                    {
+                        ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 1);
+                    }
                 }
-
-
-
-
-
-
-
-        Clipboard.Clear();
-        //Поиск вопросов к экзамену/зачёту с учётом итогового контроля
-        string exstr1 = "Вопросы к";
-        string exstr2 = "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ";
-        string exstr3 = "Итоговый контроль";
-        string exgg1; 
-        ss = SearchText("Вопросы к", "Итоговый контроль", 1);
-        if (ss != "")
-        {
-            // Поиск 
-            r.Find.Text = exstr1 + "*" + exstr3;
-            r.Find.Forward = true;
-            string exf1 = r.Find.Text;
-            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
-            if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
-            {
-
-                exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr3.Length).Text; //убираем кл.
-                r.Start = r.Start + exstr1.Length;
-                r.End = r.End - exstr3.Length;
-                int exm21 = r.ListParagraphs.Count;
-                for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                else
                 {
-                    string dfs = r.ListParagraphs[y].Range.Text;
-                    D.MyForExamAdd(dfs);
-                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
-                }
-
-
-            }   
-        }
-        else
-        {
-            r.Find.Text = exstr1 + "*" + exstr2;
-            r.Find.Forward = true;
-            string exf1 = r.Find.Text;
-            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
-            if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
-            {
-                exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr2.Length).Text; //убираем кл.
-                r.Start = r.Start + exstr1.Length;
-                r.End = r.End - exstr2.Length;
-                int exm21 = r.ListParagraphs.Count;
-                for (int y = 1; y <= r.ListParagraphs.Count; y++)
-                {
-                    string dfs = r.ListParagraphs[y].Range.Text;
-                    D.MyForExamAdd(dfs);
-                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
+                    ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 2);
                 }
             }
+            else
+            {
+                ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ ДЛЯ ОБУЧАЮЩИХСЯ", 1);
+            }
+
+            Clipboard.Clear();
+
+            //Поиск вопросов к экзамену/зачёту с учётом итогового контроля
+            string exstr1 = "Вопросы к";
+            string exstr2 = "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ";
+            string exstr3 = "Итоговый контроль";
+            string exgg1;
+            ss = SearchText("Вопросы к", "Итоговый контроль", 1);
+            if (ss != "")
+            {
+                // Поиск 
+                r.Find.Text = exstr1 + "*" + exstr3;
+                r.Find.Forward = true;
+                string exf1 = r.Find.Text;
+                r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+                r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+
+                if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
+                {
+                    exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr3.Length).Text; //убираем кл.
+                    r.Start = r.Start + exstr1.Length;
+                    r.End = r.End - exstr3.Length;
+                    int exm21 = r.ListParagraphs.Count;
+                    object Start = r.ListParagraphs[1].Range.Start;
+                    object End = r.ListParagraphs[exm21].Range.End;
+                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                    myRange.Copy();
+                    richTextBox1.Paste();
+                    for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                    {
+                        string dfs = r.ListParagraphs[y].Range.Text;
+                        D.MyForExamAdd(dfs);
+                    }
+
+                }
+            }
+            else
+            {
+                r.Find.Text = exstr1 + "*" + exstr2;
+                r.Find.Forward = true;
+                string exf1 = r.Find.Text;
+                r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+                r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+
+                if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
+                {
+                    exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr2.Length).Text; //убираем кл.
+                    r.Start = r.Start + exstr1.Length;
+                    r.End = r.End - exstr2.Length;
+                    int exm21 = r.ListParagraphs.Count;
+                    object Start = r.ListParagraphs[1].Range.Start;
+                    object End = r.ListParagraphs[exm21].Range.End;
+                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                    myRange.Copy();
+                    richTextBox1.Paste();
+                    for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                    {
+                        string dfs = r.ListParagraphs[y].Range.Text;
+                        D.MyForExamAdd(dfs);
+                    }
+                }
+            }
+            ss = SearchText("Итоговый контроль", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 1);
+            if (ss != "")
+            {
+                // Поиск 
+                r.Find.Text = exstr3 + "*" + exstr2;
+                r.Find.Forward = true;
+                string exf1 = r.Find.Text;
+                r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+                r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+
+                if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
+                {
+                    exgg1 = WordApp.ActiveDocument.Range(r.Start, r.End - exstr2.Length).Text; //убираем кл.
+                    r.Start = r.Start;
+                    r.End = r.End - exstr2.Length;
+                    int exm21 = r.Paragraphs.Count;
+                    object Start = r.Paragraphs[1].Range.Start;
+                    object End = r.Paragraphs[exm21].Range.End;
+                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                    myRange.Copy();
+                    richTextBox1.Paste();
+                }
+            }
+            
+        }
+        private void button1_Click(object sender, EventArgs e) // Метод, открывающий ворд документ
+        {
+           AnalysisOldProgramm();
+           WordApp.Quit();
+        } 
+            
+            
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
 
         }
-    }
-        
-        
-   
-        
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e) // Кнопка создания новой рабочей программы
+        {
+        } 
+
+        private void button3_Click(object sender, EventArgs e)
+        { 
+        } // бесполезная кнопка.
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e) // Основная кнопка поиска
+        {
+        }
 
         public void Process()
         {
@@ -569,6 +619,19 @@ namespace WindowsFormsApplication1
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+                if (sec == 2)
+            {
+                sec = 0;
+                button1.Enabled = true;
+                timer1.Stop();
+            }
+            else
+                sec++;
+        
         } 
    }
 }
