@@ -76,4 +76,15 @@ D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\bin
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+<<<<<<< HEAD
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+=======
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\My project\Our project\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+>>>>>>> 41706bf55c8148f963c8f9b753148af88335f21c
