@@ -14,6 +14,7 @@ namespace WindowsFormsApplication1
     
     struct Plan // Хранение данных из листа "Титул"
     {
+        public int ID; // id профиля
         public string Napr; // Направление подготовки 
         public int LS; // Считывания номера семестра
         public int DistCount; // Количество дисциплин 

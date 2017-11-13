@@ -25,7 +25,22 @@ namespace WindowsFormsApplication1
         
         public Form1()
         {
-            InitializeComponent();  
+            InitializeComponent();
+            DataBase();
+        }
+
+        public void DataBase() // Добавление в ListBox1
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "SELECT * FROM Профиль ;";
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                listBox1.Items.Add(reader["Название_профиля"].ToString() + " " + reader["Год_профиля"].ToString());
+            }
         }
 
         public void CloseProcess()
@@ -666,14 +681,14 @@ namespace WindowsFormsApplication1
             con.Open();
             OleDbDataReader reader;
             // запись в таблицу профиль
-            command.CommandText = "INSERT INTO Профиль (Название_профиля) VALUES ('" + PL.Profile + "');";
+            command.CommandText = "INSERT INTO Профиль (Название_профиля,Год_профиля) VALUES ('" + PL.Profile + "','" + PL.Year + "');";
             reader = command.ExecuteReader();
             reader.Close();
             // берем ID из профиля
             command.CommandText = "SELECT Профиль.Код FROM Профиль WHERE (((Профиль.[Название_профиля])='" + PL.Profile + "')); ";
             var code_profile = command.ExecuteScalar();
             reader.Close();
-            command.CommandText = "INSERT INTO Направление_подготовки (Код_профиля, Направление_подготовки, Станд, Год_Направления) VALUES ('" + code_profile + "','" + PL.Napr + "','" + PL.Standart + "','" + PL.Year + "');";
+            command.CommandText = "INSERT INTO Направление_подготовки (Код_профиля, Направление_подготовки, Станд) VALUES ('" + code_profile + "','" + PL.Napr + "','" + PL.Standart + "');";
             reader = command.ExecuteReader();
             reader.Close();
             // получаем id из Направление_подготовки для записи в Дисциплины_профиля
@@ -799,6 +814,39 @@ namespace WindowsFormsApplication1
         private void button2_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string Nazv = listBox1.Text.Substring(0, listBox1.Text.Length - 5).Trim();
+            string god = listBox1.Text.Substring(listBox1.Text.Length - 5).Trim();
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "SELECT Профиль.Название_профиля, Профиль.Год_профиля,Профиль.Код FROM Профиль WHERE (((Профиль.Название_профиля)='" + Nazv + "') AND ((Профиль.Год_профиля)='" + god + "'));";
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                PL.ID = Convert.ToInt32(reader["Код"]);
+            }
+            
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "DELETE Профиль.Код, Профиль.Название_профиля, Профиль.Год_профиля FROM Профиль WHERE (((Профиль.Код)=" + PL.ID + "));";
+            reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DataBase();
         }
     }  
 }
