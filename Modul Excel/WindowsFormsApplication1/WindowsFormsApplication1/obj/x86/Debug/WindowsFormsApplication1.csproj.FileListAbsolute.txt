@@ -74,6 +74,6 @@ D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
-D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
 D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+D:\PR\fiveteam\Modul Excel\WindowsFormsApplication1\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
