@@ -107,5 +107,10 @@ C:\Documents and Settings\stud\Рабочий стол\fiveteam-1\Modul Word\Win
 C:\Documents and Settings\stud\Рабочий стол\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
 C:\Documents and Settings\stud\Рабочий стол\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Documents and Settings\stud\Рабочий стол\fiveteam-1\Modul Word\WindowsFormsApplication1\obj\x86\Debug\GenerateResource.write.1.tlog
+<<<<<<< HEAD
 E:\My project\Our project\fiveteam\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
 E:\My project\Our project\fiveteam\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+=======
+D:\PR\fiveteam\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+D:\PR\fiveteam\Modul Word\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+>>>>>>> 0ee59b3d539fe1fa88d837fb2fb6c7a41f363892

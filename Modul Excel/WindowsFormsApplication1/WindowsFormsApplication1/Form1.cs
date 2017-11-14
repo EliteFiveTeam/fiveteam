@@ -11,197 +11,49 @@ using excel = Microsoft.Office.Interop.Excel; // подключение библ
 using word = Microsoft.Office.Interop.Word; // подключение библиотеки word и создание псевдонима "Alias"
 using WindowsFormsApplication1;
 using System.Threading;
+using System.Diagnostics;
 
 namespace WindowsFormsApplication1
 {
     
-    struct Plan // Хранение данных из листа "Титул"
-    {
-        public string Napr; // Направление подготовки 
-        public int LS; // Считывания номера семестра
-        public int DistCount; // Количество дисциплин 
-        public string Profile; // Профиль дисциплины 
-        public string Standart; // Стандарт дисциплины
-        public List<string> VidActive; // Список видов деятельности
-        public List<string> OriginalCompet;
-        public List<string> InfoCompet;
-
-
-
-        public void CreateList() 
-        {
-            VidActive = new List<string>();
-            OriginalCompet = new List<string>();
-            InfoCompet = new List<string>();
-        } // Объявления списка (ВД)
-        public void MyList(string Val)
-        {
-            VidActive.Add(Val); 
-        } // Add to List (ВД)
-        public void _OriginalCompet(string Val)
-        {
-            OriginalCompet.Add(Val);
-        } // Add to List (ВД)
-        public void _InfoCompet(string Val)
-        {
-            InfoCompet.Add(Val);
-        } // Add to List (ВД)
-        
-    }
-    struct PlanTime // Хранение данных из листа "План"
-    {
-        public string Naim {get; set;} // Наименование предмета 
-        public string Index {get; set;} // Индекс предмета 
-        public int Fact {get; set;} // Факт по ЗЕТ  
-        public int AtPlan {get; set;} // По плану 
-        public int ContactHours {get; set;} // Контакт часы 
-        public int Aud {get; set;} // Ауд.
-        public int SR {get; set;} // СР
-        public int Contr {get; set;} // Контроль
-        public int ElectHours {get; set;} // Элект часы
-        public int InterHours { get; set; } // Интер часы
-        public int StartDis; // Начало дисциплины
-        public int EndDis; // Конец дисциплины
-        public string Kafedra; // Наименование кафедры
-        public List<string> Compet; // Список компетенций
-        public List<string> PreDis; // Дисц ДО
-        public List<string> AfterDis; // Дисц ПОСЛЕ
-
-        public void AddAfterDis(string Val)
-        {
-            AfterDis.Add(Val);
-        } // Метод для добавления в список (Дисц ПОСЛЕ)
-        public void AddPreDis(string Val)
-        {
-            PreDis.Add(Val);
-        }   // Метод для добавления в список (Дисц ДО)
-        public void AddCompet(string Val)
-        {
-            Compet.Add(Val);
-        }   // Метод для добавления в список (Список компетенций)
-
-            /* Хранение данных в семестрах */
-            public int [] ZET; // № семестр | ЗЕТ
-            public void _ZET(int Var, int Val)
-            {
-                ZET[Var - 1] = Val; 
-            }
-            public int[] Itogo; // № семестр | Итого
-            public void _Itogo(int Var, int Val)
-            {
-                Itogo[Var - 1] = Val;
-            }
-            public int[] Lekc; // № семестр | Лекции
-            public void _Lekc(int Var, int Val)
-            {
-                Lekc[Var - 1] = Val;
-            }
-            public int[] LekcInter; // № семестр | Интеракт лекции
-            public void _LekcInter(int Var, int Val)
-            {
-                LekcInter[Var - 1] = Val;
-            }
-            public int[] Lab; // № семестр | Лаборот
-            public void _Lab(int Var, int Val)
-            {
-                Lab[Var - 1] = Val;
-            }
-            public int[] LabInter; // № семестр | Интеракт лаборот
-            public void _LabInter(int Var, int Val)
-            {
-                LabInter[Var - 1] = Val;
-            }
-            public int[] Practice; // № семестр | Практика
-            public void _Practice(int Var, int Val)
-            {
-                Practice[Var - 1] = Val;
-            }
-            public int[] PractInter; // № семестр | Интеракт практика
-            public void _PractInter(int Var, int Val)
-            {
-                PractInter[Var - 1] = Val;
-            }
-            public int[] Elect; // № семестр | Электив
-            public void _Elect(int Var, int Val)
-            {
-                Elect[Var - 1] = Val;
-            }
-            public int[] _SR; // № семестр | СР
-            public void _SR1(int Var, int Val)
-            {
-                _SR[Var - 1] = Val;
-            }
-            public int[] HoursCont; // № семестр | Контакт часы
-            public void _HoursCont(int Var, int Val)
-            {
-                HoursCont[Var - 1] = Val;
-            }
-            public int[] HoursContElect; // № семестр | Элект контакт часы
-            public void _HoursContElect(int Var, int Val)
-            {
-                HoursContElect[Var - 1] = Val;
-            }
-    
-            /* ФОРМА КОНТРОЛЯ */
-            public bool[] Examen; // Форм. контр | Экзамен
-            public bool[] Zachet; // Форм. контр | Зачет
-            public bool[] Dif_Zachet; // Форм. контр | Диф зачет
-            public int KR; // Форм. контр | Курс раб
-
-            public void _Examen (int Var)
-            {
-                
-                Examen[Var - 1] = true;
-            } // add to array
-            public void _Zachet (int Var)
-            {
-                
-                Zachet[Var - 1] = true;
-            } // add to array
-            public void _Dif_Zachet (int Var)
-            {
-                
-                Dif_Zachet[Var - 1] = true;
-            } // add to array
-
-            public void initStruct()
-            {
-                Examen = new bool[10];
-                Zachet = new bool[10];
-                Dif_Zachet = new bool[10];
-                ZET = new int[10];
-                Itogo = new int[10];
-                Lekc = new int[10];
-                LekcInter = new int[10];
-                Lab = new int[10];
-                LabInter = new int[10];
-                Practice = new int[10];
-                PractInter = new int[10];
-                Elect = new int[10];
-                _SR = new int[10];
-                HoursCont = new int[10];
-                HoursContElect = new int[10];
-                Compet = new List<string>();
-                PreDis = new List<string>();
-                AfterDis = new List<string>();
-            } // Метод для объявление массивов (в структуре объявление методов недоступен)   
-            
-           
-            }
-
-   
-    
     public partial class Form1 : Form
     {
+        
         Plan PL; // Переменная структуры "Титул"
         PlanTime[] PLtime = new PlanTime[150]; // Переменная структуры "План"
         
         
         public Form1()
         {
-            InitializeComponent();  
+            InitializeComponent();
+            DataBase();
+        }
+        public OleDbCommand command = new OleDbCommand();
+        public void DataBase() // Добавление в ListBox1
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            command.Connection = con;
+           // OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "SELECT * FROM Профиль ;";
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                listBox1.Items.Add(reader["Название_профиля"].ToString() + " " + reader["Год_профиля"].ToString());
+            }
         }
 
+        public void CloseProcess()
+        {
+            Process[] List;
+            List = Process.GetProcessesByName("EXCEL");
+            foreach (Process proc in List)
+            {
+                proc.Kill();
+            }
+        }
+        
         private void StartEndDist() // метод для определения начало и конца дисц
         {
             List<int> ListDisc = new List<int>();  // Список семестров дисц
@@ -271,23 +123,14 @@ namespace WindowsFormsApplication1
             }
             return flag;
         }
-
-        //private void Print() // вывод на экран для проверки 
-        //{
-        //    for (int i = 0; i <= PL.DistCount - 1; i++)
-        //    {
-        //        Action action5 = () => { textBox2.Text += PLtime[i].Naim + Environment.NewLine; }; Invoke(action5);
-                
-        //        for (int k = 0; k <= PLtime[i].PreDis.Count - 1; k++)
-        //            {  Action action7 = () => { textBox2.Text += " | Дисциплина до |" + " " + PLtime[i].PreDis[k] + " "  + Environment.NewLine; }; Invoke(action7); }
-        //        for (int j = 0; j <= PLtime[i].AfterDis.Count - 1; j++)
-        //        {
-        //            Action action8 = () => { textBox2.Text += " | Дисциплина после |" + " " + PLtime[i].AfterDis[j] + Environment.NewLine; }; Invoke(action8); 
-        //        }  
-                    
-                
-        //    }
-        //}
+        
+        public void Print() // вывод на экран для проверки 
+        {
+            richTextBox1.AppendText("Стандарт профиля загружен\n", Color.Green);
+            richTextBox1.AppendText("Год профиля не найден!\n", Color.Red);
+            richTextBox1.AppendText("Направление профиля не найдено!\n", Color.Red);
+            richTextBox1.AppendText("Год профиля загружен\n", Color.Green);
+        }
 
         private void AnalysisDataExcel()
         {
@@ -300,6 +143,7 @@ namespace WindowsFormsApplication1
             Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);  // Запуск главного потока 
             Fname = openFileDialog1.FileName;
             ExcelApp.Workbooks.Add(Fname); // загружаем в excel файл с рабочей книгой
+            Action action1 = () => { button1.Enabled = false; }; Invoke(action1);
             excel.Sheets excelsheets; // объявление переменных хранящих листы книги
             excel.Worksheet excelworksheet;
             excelsheets = ExcelApp.Worksheets;
@@ -314,18 +158,34 @@ namespace WindowsFormsApplication1
                 PL.Standart = Open2Sheet.Trim();
                 if (PL.Standart != null && PL.Standart != "")
                 {
-                    Action Progress = () => { richTextBox1.Text += "Стандарт профиля загружен" + Environment.NewLine; }; Invoke(Progress);
+                    Action Progress = () => {richTextBox1.AppendText("Стандарт профиля загружен\n", Color.Green); }; Invoke(Progress);
+                   
                 }
                 else
                 {
-                    Action Progress = () =>
-                    {
-
-                        richTextBox1.Text += "Стандарт профиля не найден!" + Environment.NewLine;
-                        richTextBox1.Select(richTextBox1.Text.IndexOf("Стандарт профиля не найден!"), "Стандарт профиля не найден!".Length);
-                        richTextBox1.SelectionColor = Color.Red;
-                    }; Invoke(Progress);
+                    Action Progress = () => {richTextBox1.AppendText("Стандарт профиля не найден!\n", Color.Red);}; Invoke(Progress);
                 }
+                }
+                string YR = excelworksheet.Cells[i, 13].Text;
+                if (YR.IndexOf("подготовки") > 0)
+                {
+                    string Open2Sheet = excelworksheet.Cells[i, 18].Text;
+                    PL.Year = Open2Sheet.Trim();
+                    if (PL.Year == "")
+                    {
+                        string repeat = excelworksheet.Cells[i, 20].Text;
+                        PL.Year = repeat;
+                        PL.Year = repeat.Trim();
+                    }
+                    if (PL.Year != null && PL.Year != "")
+                    {
+                        Action Progress = () =>{richTextBox1.AppendText("Год профиля загружен\n", Color.Green); }; Invoke(Progress);
+                    }
+                    else
+                    {
+                        Action Progress = () =>
+                        {richTextBox1.AppendText("Год профиля не найден!\n", Color.Red);}; Invoke(Progress);                     
+                    }
                 }
                 
             }
@@ -364,10 +224,7 @@ namespace WindowsFormsApplication1
                 {
                     Open1Sheet = excelworksheet.Cells[18, NS].Text;
                 }
-                else
-                {
-                    //MessageBox.Show("Направление не найдено", "Ошибка!", MessageBoxButtons.OK);
-                }
+                
             }
             if (Flag == 0)
             {
@@ -383,20 +240,24 @@ namespace WindowsFormsApplication1
                 ExcelApp.Visible = false;
                 
                 PL.Napr = STRNapr.Trim();
+
                 if (PL.Napr != null && PL.Napr != "")
                 {
-                    Action Progress = () =>
-                    {
-                        richTextBox1.Text += "Направление профиля загружено" + Environment.NewLine;
-                        richTextBox1.Select(richTextBox1.Text.IndexOf("Направление профиля загружено"), "Направление профиля загружено".Length);
-                        richTextBox1.SelectionColor = Color.Black;
-                    }; Invoke(Progress);
+                    Action Progress = () => {richTextBox1.AppendText("Направление профиля загружено\n", Color.Green);}; Invoke(Progress);
                 }
                 else 
                 {
-                    Action Progress = () => { richTextBox1.Text += "Направление профиля не найдено!"; }; Invoke(Progress);
+                    Action Progress = () => {richTextBox1.AppendText("Направление профиля не найдено!\n", Color.Red);}; Invoke(Progress);
                 }
                 PL.Profile = STRProf.Trim();
+                if (PL.Profile != null && PL.Profile != "")
+                {
+                    Action Progress = () => {richTextBox1.AppendText("Профиль загружен\n", Color.Green);}; Invoke(Progress);
+                }
+                else 
+                {
+                    Action Progress = () => {richTextBox1.AppendText("Профиль не найден!\n", Color.Red);}; Invoke(Progress);
+                }
 
             }
             int J; // переменная номера столбца
@@ -412,9 +273,10 @@ namespace WindowsFormsApplication1
 
                         SN = i;
                         FlagVids = 0;
+                        Action Progress = () => { richTextBox1.AppendText("Виды деятельности загружены\n", Color.Green); }; Invoke(Progress);
                         break;
                     }
-
+                    
 
                 }
                 if (FlagVids == 0)
@@ -429,14 +291,11 @@ namespace WindowsFormsApplication1
                     if (STR1.IndexOf("+") >= 0)
                     {
                         PL.MyList(STR.Trim());
-
-
-                        //textBox1.Text = textBox1.Text  +  Environment.NewLine  +  PL.VidActive[PL.VidActive.Count - 1];
                     }
 
                 }
             }
-            //textBox2.Text = textBox2.Text + PL.Napr + Environment.NewLine + PL.Profile + Environment.NewLine + PL.Standart + Environment.NewLine;
+         
 
 
 
@@ -453,17 +312,24 @@ namespace WindowsFormsApplication1
                     PL._InfoCompet(Info.Trim());
                 }
             }
-          
+            if (PL.OriginalCompet.Count != 0)
+            {
+                Action Progress = () => { richTextBox1.AppendText("Информация о компетенциях загружена\n", Color.Green); }; Invoke(Progress);
+            }
+            else
+            {
+                Action Progress = () => { richTextBox1.AppendText("Информация о компетенциях не найдена!\n", Color.Red); }; Invoke(Progress);
+            }
+            
+            
             /* Считывания информации с листа "План" */
-
-
-
+            
             excelworksheet = (excel.Worksheet)excelsheets.get_Item("План");
             string PlanSheet1 = excelworksheet.Cells[6, 3].Text; // обращение к ячейкам книги "Список дисциплин"
             int ND = 0;
-
+            PL.DistCount = 0;
             /////////////////////////////////////////////////////////////////////
-            for (int d = 6; d <= 140; d++)
+            for (int d = 6; d <= 150; d++)
             {
                 string stroch = excelworksheet.Cells[d, 1].Text; // j - строчка ; i - столбец
 
@@ -490,6 +356,7 @@ namespace WindowsFormsApplication1
                         string _index = excelworksheet.Cells[j, 2].Text;
                         PLtime[ND].Naim = STR; // наименование
                         PLtime[ND].Index = _index; // индекс дисциплины
+                     
 
 
                         string PlanSheet2 = excelworksheet.Cells[3, i].Text; // читаем название шапки
@@ -753,35 +620,69 @@ namespace WindowsFormsApplication1
                             {
                                 PLtime[ND].AddCompet(s);
                             }
+                            
                         }
                         if (PlanSheet2.LastIndexOf("наименование") >= 0) // Кафедра 
                         {
                             string KF = excelworksheet.Cells[j, i].Text;
                             PLtime[ND].Kafedra = KF;
+                            
                         }
                     }
+                    /* Обработка возможных ошибок*/
+                    if (PLtime[ND].Naim == "")
+                    {
+                        Action Progress = () => { richTextBox1.AppendText("Наименование дисциплины не найдено!\n", Color.Red); }; Invoke(Progress);
+                    }
+                    if (PLtime[ND].Index == "")
+                    {
+                        Action Progress = () => { richTextBox1.AppendText("Индекс не найден!\n", Color.Red); }; Invoke(Progress);
+                    }
+                    if (PLtime[ND].Compet.Count == 0)
+                    {
+                        Action Progress = () => { richTextBox1.AppendText("Компетенции не найдены!\n", Color.Red); }; Invoke(Progress);
+                    }
+                    if (PLtime[ND].Kafedra == "")
+                    {
+                        Action Progress = () => { richTextBox1.AppendText("Кафедра не найдена!\n", Color.Red); }; Invoke(Progress);
+                    }
 
+                    // счетчик дисциплин
                     ND++;
+
+                    // Процесс загрузки
+                    if (PL.DistCount>0)
+                    {
+                        Action Progress = () => { richTextBox1.AppendText("Загрузка дисциплин прогресс " + ND.ToString() + " загружено\n", Color.Green); }; Invoke(Progress);
+                    }
+                    
 
                 }
                 Action action2 = () => { progressBar1.Maximum = PL.DistCount; progressBar1.Value = ND; }; Invoke(action2);
                
             }
-            ExcelApp.Quit();
+
+            // Если дисциплины не найдены, появляется информация об ошибке
+            if (PL.DistCount == 0)
+            {
+                Action Progress = () => { richTextBox1.AppendText("Дисциплины не найдены!\n", Color.Red); }; Invoke(Progress);
+            }
+                   
+
             StartEndDist(); // определения начало и конца дисцип
             BeforeAndAfterDis(); // анализ дисц ПОСЛЕ и ДО
             //Print(); вывод дисциплин ДО и ПОСЛЕ
             PL.DistCount = 0;
-
+            CloseProcess();
             
-            /* Заполнение инфррмации в БАЗУ ДАННЫХ */ 
-
+            /* Заполнение инфррмации в БАЗУ ДАННЫХ */
+            Action AddBD = () => { richTextBox1.AppendText("Заполняем Базу Данных \n", Color.Blue); }; Invoke(AddBD);
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
             OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + PL.Profile + "','" + PL.Napr + "','" + PL.Standart + "');", con);
             con.Open();
             OleDbDataReader reader;
             // запись в таблицу профиль
-            command.CommandText = "INSERT INTO Профиль (Название_профиля) VALUES ('" + PL.Profile + "');";
+            command.CommandText = "INSERT INTO Профиль (Название_профиля,Год_профиля) VALUES ('" + PL.Profile + "','" + PL.Year + "');";
             reader = command.ExecuteReader();
             reader.Close();
             // берем ID из профиля
@@ -808,7 +709,7 @@ namespace WindowsFormsApplication1
             {
                 if (PLtime[i].Naim != null)
                 {
-                    command.CommandText = "INSERT INTO Дисциплины_профиля (Код_направления_подготовки,Дисциплины,Индекс,Факт_по_зет,По_плану,Контакт_часы,Аудиторные,Самостоятельная_работа,Контроль,Элект_часы,Интер_часы,Код_профиля) VALUES ('" + code + "','" + PLtime[i].Naim + "','" + PLtime[i].Index + "','" + PLtime[i].Fact + "','" + PLtime[i].AtPlan + "','" + PLtime[i].ContactHours + "','" + PLtime[i].Aud + "','" + PLtime[i].SR + "','" + PLtime[i].Contr + "','" + PLtime[i].ElectHours + "','" + PLtime[i].InterHours + "'," + code_profile + ");";
+                    command.CommandText = "INSERT INTO Дисциплины_профиля (Код_направления_подготовки,Дисциплины,Индекс,Факт_по_зет,По_плану,Контакт_часы,Аудиторные,Самостоятельная_работа,Контроль,Элект_часы,Интер_часы,Код_профиля,Закрепленная_кафедра) VALUES ('" + code + "','" + PLtime[i].Naim + "','" + PLtime[i].Index + "','" + PLtime[i].Fact + "','" + PLtime[i].AtPlan + "','" + PLtime[i].ContactHours + "','" + PLtime[i].Aud + "','" + PLtime[i].SR + "','" + PLtime[i].Contr + "','" + PLtime[i].ElectHours + "','" + PLtime[i].InterHours + "'," + code_profile + ",'" + PLtime[i].Kafedra + "');";
                     reader = command.ExecuteReader();
                     reader.Close();
                     //получаем ID дисциплины которую записали
@@ -864,11 +765,13 @@ namespace WindowsFormsApplication1
                 reader.Close();
 
             }
-            Action action1 = () => { MessageBox.Show("Complete"); }; Invoke(action1); // Запуск главного потока
+            Action CompleteBD = () => { richTextBox1.AppendText("Информация в Базу Данных загружена  \n", Color.Green); }; Invoke(CompleteBD);
+
+            Action BT = () => { button1.Enabled = true; }; Invoke(BT);
 
         }
 
-       
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -879,6 +782,7 @@ namespace WindowsFormsApplication1
         {
             Thread theard = new Thread(AnalysisDataExcel); //второй поток для 
             theard.Start();
+            //Print();
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -911,6 +815,39 @@ namespace WindowsFormsApplication1
         private void button2_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string Nazv = listBox1.Text.Substring(0, listBox1.Text.Length - 5).Trim();
+            string god = listBox1.Text.Substring(listBox1.Text.Length - 5).Trim();
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "SELECT Профиль.Название_профиля, Профиль.Год_профиля,Профиль.Код FROM Профиль WHERE (((Профиль.Название_профиля)='" + Nazv + "') AND ((Профиль.Год_профиля)='" + god + "'));";
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                PL.ID = Convert.ToInt32(reader["Код"]);
+            }
+            
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
+            OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
+            con.Open();
+            OleDbDataReader reader;
+            command.CommandText = "DELETE Профиль.Код, Профиль.Название_профиля, Профиль.Год_профиля FROM Профиль WHERE (((Профиль.Код)=" + PL.ID + "));";
+            reader = command.ExecuteReader();
+            reader.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DataBase();
         }
     }  
 }
