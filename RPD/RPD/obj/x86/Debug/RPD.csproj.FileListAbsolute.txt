@@ -1,0 +1,9 @@
+D:\PR\fiveteam\RPD\RPD\bin\Debug\RPD.exe
+D:\PR\fiveteam\RPD\RPD\bin\Debug\RPD.pdb
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.resources
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormMain.resources
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
