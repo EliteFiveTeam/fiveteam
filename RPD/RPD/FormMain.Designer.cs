@@ -72,6 +72,7 @@
             this.lst_prof.Name = "lst_prof";
             this.lst_prof.Size = new System.Drawing.Size(219, 329);
             this.lst_prof.TabIndex = 2;
+            this.lst_prof.SelectedIndexChanged += new System.EventHandler(this.lst_prof_SelectedIndexChanged);
             // 
             // clst_disc
             // 
@@ -118,6 +119,7 @@
             this.bt_del_bd.TabIndex = 7;
             this.bt_del_bd.Text = "Удалить профиль";
             this.bt_del_bd.UseVisualStyleBackColor = true;
+            this.bt_del_bd.Click += new System.EventHandler(this.bt_del_bd_Click);
             // 
             // lb_path_fos
             // 

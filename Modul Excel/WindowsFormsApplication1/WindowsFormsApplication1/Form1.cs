@@ -31,11 +31,12 @@ namespace WindowsFormsApplication1
         public OleDbCommand command = new OleDbCommand();
         public void DataBase() // Добавление в ListBox1
         {
+            OleDbDataReader reader;
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + @"Data Source=" + Application.StartupPath + "/baza_dan_proekt_kh.accdb");
             command.Connection = con;
            // OleDbCommand command = new OleDbCommand("INSERT INTO Направление_подготовки (Индекс, Название, Станд) VALUES ('" + 1 + "','" + 2 + "','" + 3 + "');", con);
             con.Open();
-            OleDbDataReader reader;
+            
             command.CommandText = "SELECT * FROM Профиль ;";
             reader = command.ExecuteReader();
             while (reader.Read())

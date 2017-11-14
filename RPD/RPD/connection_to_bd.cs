@@ -16,7 +16,7 @@ namespace RPD
     {
         public OleDbConnection con;
         public OleDbCommand command = new OleDbCommand();
-        public OleDbDataReader reader;
+        public OleDbDataReader reader ;
 
         
         public void Connect()
