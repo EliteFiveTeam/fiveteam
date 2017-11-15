@@ -15,7 +15,7 @@ namespace RPD
     public partial class FormMain : Form
     {
         connection_to_bd BD = new connection_to_bd();
-        
+        Plan PL; // Переменная структуры "Титул"
        
        
         public FormMain()
