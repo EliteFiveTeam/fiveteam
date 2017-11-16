@@ -70,7 +70,7 @@
             this.lst_prof.FormattingEnabled = true;
             this.lst_prof.Location = new System.Drawing.Point(21, 46);
             this.lst_prof.Name = "lst_prof";
-            this.lst_prof.Size = new System.Drawing.Size(219, 329);
+            this.lst_prof.Size = new System.Drawing.Size(281, 329);
             this.lst_prof.TabIndex = 2;
             this.lst_prof.SelectedIndexChanged += new System.EventHandler(this.lst_prof_SelectedIndexChanged);
             // 
@@ -79,8 +79,9 @@
             this.clst_disc.FormattingEnabled = true;
             this.clst_disc.Location = new System.Drawing.Point(308, 46);
             this.clst_disc.Name = "clst_disc";
-            this.clst_disc.Size = new System.Drawing.Size(226, 334);
+            this.clst_disc.Size = new System.Drawing.Size(328, 334);
             this.clst_disc.TabIndex = 3;
+            this.clst_disc.SelectedIndexChanged += new System.EventHandler(this.clst_disc_SelectedIndexChanged);
             // 
             // bt_addprof
             // 
@@ -110,6 +111,7 @@
             this.bt_select.TabIndex = 6;
             this.bt_select.Text = "Выбрать";
             this.bt_select.UseVisualStyleBackColor = true;
+            this.bt_select.Click += new System.EventHandler(this.bt_select_Click);
             // 
             // bt_del_bd
             // 

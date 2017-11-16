@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.cs" />
+    <Compile Include="DataAccess.cs" />
     <Compile Include="DataExcel.cs" />
     <Compile Include="connection_to_bd.cs" />
     <Compile Include="FormMain.cs">
@@ -73,6 +74,7 @@
     <Compile Include="FormWord.Designer.cs">
       <DependentUpon>FormWord.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">
