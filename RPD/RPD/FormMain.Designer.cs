@@ -236,7 +236,6 @@
 
         private System.Windows.Forms.Label lb_prof;
         private System.Windows.Forms.Label lb_disc;
-        private System.Windows.Forms.ListBox lst_prof;
         private System.Windows.Forms.CheckedListBox clst_disc;
         private System.Windows.Forms.Button bt_addprof;
         private System.Windows.Forms.Button bt_createRP;
@@ -251,6 +250,7 @@
         private System.Windows.Forms.Label lb_fos;
         private System.Windows.Forms.Button bt_select_rp;
         private System.Windows.Forms.Label lb_rp;
+        public System.Windows.Forms.ListBox lst_prof;
     }
 }
 

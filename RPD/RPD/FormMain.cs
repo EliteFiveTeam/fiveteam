@@ -43,7 +43,8 @@ namespace RPD
         private void bt_addprof_Click(object sender, EventArgs e)
         {
             FormExcel fm = new FormExcel();
-            fm.Show();
+            fm.Owner = this;
+            fm.ShowDialog();
         }
 
         private void FormMain_Load(object sender, EventArgs e)

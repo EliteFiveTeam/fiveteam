@@ -18,6 +18,7 @@ namespace RPD
     {
         Plan PL; // Переменная структуры "Титул"
         PlanTime[] PLtime = new PlanTime[150]; // Переменная структуры "План"
+        connection_to_bd BD = new connection_to_bd();
         
         public FormExcel()
         {
@@ -118,6 +119,7 @@ namespace RPD
                 int NS;
                 excel.Application ExcelApp = new excel.Application(); // создаем объект excel;
                 ExcelApp.Visible = false; // показывает или скрывает файл Excel;
+                openFileExcel.Filter = "Файлы Excel(*.xls)|*.xls|Excel(*.xls)|*.xls"; 
                 Action action = () => { openFileExcel.ShowDialog(); }; Invoke(action);  // Запуск главного потока 
                 Fname = openFileExcel.FileName;
                 ExcelApp.Workbooks.Add(Fname); // загружаем в excel файл с рабочей книгой
@@ -745,10 +747,30 @@ namespace RPD
                 Action CompleteBD = () => { RTB_ExcelLog.AppendText("Информация в Базу Данных загружена  \n", Color.Green); }; Invoke(CompleteBD);
 
                 Action BT = () => { bt_selct_excel.Enabled = true; }; Invoke(BT);
-            
+                DataBase();
             
         }
 
+        public void DataBase() // Добавление в ListBox1
+        {
+            FormMain main = this.Owner as FormMain;
+            if (main != null)
+            {
+
+                Action BT = () =>
+                {
+                    main.lst_prof.Items.Clear();
+                    BD.Connect();
+                    BD.command.CommandText = "SELECT * FROM Профиль ;";
+                    BD.reader = BD.command.ExecuteReader();
+                    while (BD.reader.Read())
+                    {
+                        main.lst_prof.Items.Add(BD.reader.GetString(1) + " " + BD.reader.GetString(2));
+
+                    }
+                }; Invoke(BT);
+            }
+        }
         
 
 
