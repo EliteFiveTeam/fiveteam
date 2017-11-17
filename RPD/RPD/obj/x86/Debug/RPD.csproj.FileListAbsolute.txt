@@ -16,3 +16,4 @@ C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.res
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csprojResolveAssemblyReference.cache

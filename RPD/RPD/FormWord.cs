@@ -15,12 +15,21 @@ namespace RPD
 {
     public partial class FormWord : Form
     {
-        private string _FileNaim; 
+        connection_to_bd BD = new connection_to_bd();
+        DataAccess DA;
+        private string _FileNaim;
+        private int _ID;
         public string FileNaim // путь к шаблону НРП
         {
             get { return _FileNaim; }
             set { _FileNaim = value; }
         }
+        public int ID
+        {
+            get { return _ID; }
+            set { _ID = value; }
+        } // id Дисциплины
+        private int ID_Napr; // id Направление Подготовки
 
         public static bool btn1;
         Tema tems;
@@ -492,7 +501,7 @@ namespace RPD
 
         }
       
-        private void CreateNewProgram()
+        private void CreateNewProgram() // работа с Новой РП
         {
             WordApp = new word.Application(); // создаем объект word;
             FormMain FM = new FormMain();
@@ -517,12 +526,47 @@ namespace RPD
         {
             AnalysisOldProgramm();
             WordApp.Quit();
+            
         }
 
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
         }
+
+        public void fillingMainData() // загрузка информации из БД
+        {
+            BD.Connect();
+            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Индекс,Дисциплины_профиля.Код_направления_подготовки, Дисциплины_профиля.Факт_по_зет, Дисциплины_профиля.По_плану, Дисциплины_профиля.Контакт_часы, Дисциплины_профиля.Аудиторные, Дисциплины_профиля.Самостоятельная_работа, Дисциплины_профиля.Контроль, Дисциплины_профиля.Элект_часы, Дисциплины_профиля.Интер_часы, Дисциплины_профиля.Закрепленная_кафедра, Дисциплины_профиля.Код_профиля FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код)=" + ID + "));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.Naim = BD.reader["Дисциплины"].ToString();
+                DA.Index = BD.reader["Индекс"].ToString();
+                DA.Fact = Convert.ToInt32(BD.reader["Факт_по_зет"]);
+                DA.AtPlan = Convert.ToInt32(BD.reader["По_плану"]);
+                DA.ContactHours = Convert.ToInt32(BD.reader["Контакт_часы"]);
+                DA.Aud = Convert.ToInt32(BD.reader["Аудиторные"]);
+                DA.SR = Convert.ToInt32(BD.reader["Самостоятельная_работа"]);
+                DA.Contr = Convert.ToInt32(BD.reader["Контроль"]);
+                DA.ElectHours = Convert.ToInt32(BD.reader["Элект_часы"]);
+                DA.InterHours = Convert.ToInt32(BD.reader["Интер_часы"]);
+                DA.Kafedra = BD.reader["Закрепленная_кафедра"].ToString();
+                DA.ID = Convert.ToInt32(BD.reader["Код_профиля"]);
+                ID_Napr = Convert.ToInt32(BD.reader["Код_направления_подготовки"]);
+            }
+            BD.reader.Close();
+            BD.command.CommandText = "SELECT Направление_подготовки.Код, Направление_подготовки.Направление_подготовки, Направление_подготовки.Станд FROM Направление_подготовки WHERE (((Направление_подготовки.Код)="+ID_Napr+"));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.Napr = BD.reader["Направление_подготовки"].ToString();
+                DA.Standart = BD.reader["Станд"].ToString();
+            }
+            BD.reader.Close();
+
+        }
+
     }
 }
     

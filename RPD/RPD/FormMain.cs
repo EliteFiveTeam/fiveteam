@@ -20,7 +20,8 @@ namespace RPD
         Plan PL; // Переменная структуры "Титул"
         DataAccess DA;
         word.Application WordApp;
-        FormWord fm = new FormWord();
+        FormWord FW = new FormWord();
+       
        
         
        
@@ -44,7 +45,7 @@ namespace RPD
         private void bt_createRP_Click(object sender, EventArgs e)
         {
             
-            fm.Show();
+            FW.Show();
         }
 
         private void bt_addprof_Click(object sender, EventArgs e)
@@ -71,30 +72,7 @@ namespace RPD
             DataBase();
         }
 
-        public void fillingMainData()
-        {
-            BD.Connect();
-            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Индекс, Дисциплины_профиля.Факт_по_зет, Дисциплины_профиля.По_плану, Дисциплины_профиля.Контакт_часы, Дисциплины_профиля.Аудиторные, Дисциплины_профиля.Самостоятельная_работа, Дисциплины_профиля.Контроль, Дисциплины_профиля.Элект_часы, Дисциплины_профиля.Интер_часы, Дисциплины_профиля.Закрепленная_кафедра, Дисциплины_профиля.Код_профиля FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код)=" + DA.Id_disp + "));";
-            BD.reader = BD.command.ExecuteReader();
-            while (BD.reader.Read())
-            {
-                DA.Naim = BD.reader["Дисциплины"].ToString();
-                DA.Napr = BD.reader["Код_направления_подготовки"].ToString();
-                DA.Index = BD.reader["Индекс"].ToString();
-                DA.Fact = Convert.ToInt32(BD.reader["Факт_по_зет"]);
-                DA.AtPlan = Convert.ToInt32(BD.reader["По_плану"]);
-                DA.ContactHours = Convert.ToInt32(BD.reader["Контакт_часы"]);
-                DA.Aud = Convert.ToInt32(BD.reader["Аудиторные"]);
-                DA.SR = Convert.ToInt32(BD.reader["Самостоятельная_работа"]);
-                DA.Contr = Convert.ToInt32(BD.reader["Контроль"]);
-                DA.ElectHours = Convert.ToInt32(BD.reader["Элект_часы"]);
-                DA.InterHours = Convert.ToInt32(BD.reader["Интер_часы"]);
-                DA.Kafedra = BD.reader["Закрепленная_кафедра"].ToString();
-                DA.ID = Convert.ToInt32(BD.reader["Код_профиля"]);
-            }
-            BD.reader.Close();
-
-        }
+        
 
         private void lst_prof_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -109,7 +87,7 @@ namespace RPD
                 PL.ID = Convert.ToInt32(BD.reader["Код"]);
             }
             BD.reader.Close();
-            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Код_профиля FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_профиля)=" + PL.ID +"));";
+            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Код_профиля FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_профиля)=" + PL.ID + "));";
             BD.reader = BD.command.ExecuteReader();
             while (BD.reader.Read())
             {
@@ -122,12 +100,12 @@ namespace RPD
         {
             string id_disp = clst_disc.Text;
             BD.Connect();
-            BD.command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_профиля)="+PL.ID+") AND ((Дисциплины_профиля.Дисциплины)='"+id_disp +"'));";
+            BD.command.CommandText = "SELECT Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код_профиля)=" + PL.ID + ") AND ((Дисциплины_профиля.Дисциплины)='" + id_disp + "'));";
             BD.reader = BD.command.ExecuteReader();
             // берем id дисциплины выброной из clst_disc
             while (BD.reader.Read())
             {
-               DA.Id_disp = Convert.ToInt32(BD.reader["Код"]);
+                FW.ID = Convert.ToInt32(BD.reader["Код"]);
                
             }
             BD.reader.Close();
@@ -136,8 +114,8 @@ namespace RPD
 
         private void bt_select_Click(object sender, EventArgs e)
         {
-            
-            fillingMainData();
+           
+            FW.fillingMainData(); // добавление в структуру DataAccess из БД 
         }
 
         
@@ -146,7 +124,7 @@ namespace RPD
            
             openFileWord.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
             openFileWord.ShowDialog();
-            fm.FileNaim = openFileWord.FileName; 
+            FW.FileNaim = openFileWord.FileName; // открытие шаблона Новой РП
              
         }
   
