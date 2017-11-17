@@ -16,3 +16,12 @@ C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.res
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
+E:\My project\Our project\fiveteam\RPD\RPD\bin\Debug\RPD.exe
+E:\My project\Our project\fiveteam\RPD\RPD\bin\Debug\RPD.pdb
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormMain.resources
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.resources
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache

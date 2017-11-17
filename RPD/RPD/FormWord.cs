@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.Data.OleDb;
 using excel = Microsoft.Office.Interop.Excel; // подключение библиотеки excel и создание псевдонима "Alias"
 using word = Microsoft.Office.Interop.Word; // подключение библиотеки word и создание псевдонима "Alias"
 using System.Diagnostics;
@@ -35,6 +36,8 @@ namespace RPD
             InitializeComponent();
             sec = 0;
         }
+            
+
         public string SearchText(string wordText1, string wordText2, int nf) // Поиск между двумя фрагментами - метод поиска 
         {
             Microsoft.Office.Interop.Word.Range r;//Range
@@ -419,7 +422,7 @@ namespace RPD
                     word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
                     myRange.Copy();
                     rtb_ForExam.Paste();
-                    Action Progress = () => { rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green); }; Invoke(Progress);
+                    rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green); 
                     for (int y = 1; y <= r.ListParagraphs.Count; y++)
                     {
                         string dfs = r.ListParagraphs[y].Range.Text;
@@ -438,7 +441,7 @@ namespace RPD
                 ss = SearchText("Вопросы к", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ", 1);
                 if (ss == "")
                 {
-                    Action Progress = () => { rtb_Log.AppendText("Вопросы для зачёта/экзамена не найдены\n", Color.Red); }; Invoke(Progress);
+                    rtb_Log.AppendText("Вопросы для зачёта/экзамена не найдены\n", Color.Red);
                 }
                 if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
                 {
@@ -451,7 +454,7 @@ namespace RPD
                     word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
                     myRange.Copy();
                     rtb_ForExam.Paste();
-                    Action Progress = () => { rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green); }; Invoke(Progress);
+                    rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green);
                     for (int y = 1; y <= r.ListParagraphs.Count; y++)
                     {
                         string dfs = r.ListParagraphs[y].Range.Text;
@@ -481,12 +484,12 @@ namespace RPD
                     word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
                     myRange.Copy();
                     rtb_ForExam.Paste();
-                    Action Progress = () => { rtb_Log.AppendText("Итоговый контроль найден\n", Color.Green); }; Invoke(Progress);
+                    rtb_Log.AppendText("Итоговый контроль найден\n", Color.Green); 
                 }
             }
             else
             {
-                Action Progress = () => { rtb_Log.AppendText("Итоговый контроль не найден\n", Color.Red); }; Invoke(Progress);
+                rtb_Log.AppendText("Итоговый контроль не найден\n", Color.Red);
             }
 
 
@@ -522,6 +525,16 @@ namespace RPD
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
+        }
+
+        private void rtb_Tems_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rtb_ForExam_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
