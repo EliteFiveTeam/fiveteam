@@ -45,6 +45,7 @@
             this.lb_fos = new System.Windows.Forms.Label();
             this.bt_select_rp = new System.Windows.Forms.Button();
             this.lb_rp = new System.Windows.Forms.Label();
+            this.openFileWord = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // lb_prof
@@ -194,6 +195,7 @@
             this.bt_select_rp.TabIndex = 17;
             this.bt_select_rp.Text = "Открыть";
             this.bt_select_rp.UseVisualStyleBackColor = true;
+            this.bt_select_rp.Click += new System.EventHandler(this.bt_select_rp_Click);
             // 
             // lb_rp
             // 
@@ -203,6 +205,10 @@
             this.lb_rp.Size = new System.Drawing.Size(152, 13);
             this.lb_rp.TabIndex = 16;
             this.lb_rp.Text = "Шаболн рабочей программы";
+            // 
+            // openFileWord
+            // 
+            this.openFileWord.FileName = "openFileWord";
             // 
             // FormMain
             // 
@@ -238,7 +244,6 @@
 
         private System.Windows.Forms.Label lb_prof;
         private System.Windows.Forms.Label lb_disc;
-        private System.Windows.Forms.CheckedListBox clst_disc;
         private System.Windows.Forms.Button bt_addprof;
         private System.Windows.Forms.Button bt_createRP;
         private System.Windows.Forms.Button bt_select;
@@ -253,6 +258,8 @@
         private System.Windows.Forms.Button bt_select_rp;
         private System.Windows.Forms.Label lb_rp;
         public System.Windows.Forms.ListBox lst_prof;
+        public System.Windows.Forms.CheckedListBox clst_disc;
+        private System.Windows.Forms.OpenFileDialog openFileWord;
     }
 }
 

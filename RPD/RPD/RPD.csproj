@@ -56,6 +56,7 @@
     <Compile Include="DataAccess.cs" />
     <Compile Include="DataExcel.cs" />
     <Compile Include="connection_to_bd.cs" />
+    <Compile Include="DataWord.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,7 +75,6 @@
     <Compile Include="FormWord.Designer.cs">
       <DependentUpon>FormWord.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">

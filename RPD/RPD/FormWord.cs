@@ -15,6 +15,13 @@ namespace RPD
 {
     public partial class FormWord : Form
     {
+        private string _FileNaim; 
+        public string FileNaim // путь к шаблону НРП
+        {
+            get { return _FileNaim; }
+            set { _FileNaim = value; }
+        }
+
         public static bool btn1;
         Tema tems;
         Discipline dis;
@@ -484,11 +491,15 @@ namespace RPD
 
 
         }
-        private void button1_Click(object sender, EventArgs e) // Метод, открывающий ворд документ
+      
+        private void CreateNewProgram()
         {
-            AnalysisOldProgramm();
-            WordApp.Quit();
+            WordApp = new word.Application(); // создаем объект word;
+            FormMain FM = new FormMain();
+            string Check = FileNaim;
+            
         }
+        
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (sec == 2)
@@ -506,6 +517,11 @@ namespace RPD
         {
             AnalysisOldProgramm();
             WordApp.Quit();
+        }
+
+        private void bt_create_newrp_Click(object sender, EventArgs e)
+        {
+            CreateNewProgram();
         }
     }
 }

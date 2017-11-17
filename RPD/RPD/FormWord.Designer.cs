@@ -40,6 +40,7 @@
             this.btn_OpenWp = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.bt_create_newrp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // rtb_Add_Litera
@@ -77,7 +78,7 @@
             // 
             this.rtb_Log.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rtb_Log.BackColor = System.Drawing.SystemColors.Window;
-            this.rtb_Log.Location = new System.Drawing.Point(549, 2);
+            this.rtb_Log.Location = new System.Drawing.Point(734, 2);
             this.rtb_Log.Name = "rtb_Log";
             this.rtb_Log.ReadOnly = true;
             this.rtb_Log.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
@@ -125,11 +126,22 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // bt_create_newrp
+            // 
+            this.bt_create_newrp.Location = new System.Drawing.Point(940, 510);
+            this.bt_create_newrp.Name = "bt_create_newrp";
+            this.bt_create_newrp.Size = new System.Drawing.Size(123, 38);
+            this.bt_create_newrp.TabIndex = 24;
+            this.bt_create_newrp.Text = "Создать новую РП";
+            this.bt_create_newrp.UseVisualStyleBackColor = true;
+            this.bt_create_newrp.Click += new System.EventHandler(this.bt_create_newrp_Click);
+            // 
             // FormWord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 642);
+            this.ClientSize = new System.Drawing.Size(1149, 653);
+            this.Controls.Add(this.bt_create_newrp);
             this.Controls.Add(this.rtb_Add_Litera);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.rtb_LiteraBasic);
@@ -160,5 +172,6 @@
         private System.Windows.Forms.Button btn_OpenWp;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button bt_create_newrp;
     }
 }
