@@ -16,6 +16,7 @@ C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.res
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
 C:\Users\Mask\Desktop\git_givno\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
+<<<<<<< HEAD
 E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
 E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
 E:\My project\Our project\fiveteam\RPD\RPD\bin\Debug\RPD.exe
@@ -25,3 +26,6 @@ E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.resources
 E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
 E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
 E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
+=======
+D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csprojResolveAssemblyReference.cache
+>>>>>>> 81942e41a19e1da270749e3f1b48c85fe48778ee
