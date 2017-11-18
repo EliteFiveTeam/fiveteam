@@ -537,7 +537,6 @@ namespace RPD
             CreateNewProgram();
         }
 
-<<<<<<< HEAD
         private void rtb_Tems_TextChanged(object sender, EventArgs e)
         {
 
@@ -547,14 +546,20 @@ namespace RPD
         {
 
         }
-=======
+
         public void fillingMainData() // загрузка информации из БД
         {
+            // Обьявление массивов
+            DA.CreateList();
+            DA.initStruct();
+
+
             BD.Connect();
-            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Индекс,Дисциплины_профиля.Код_направления_подготовки, Дисциплины_профиля.Факт_по_зет, Дисциплины_профиля.По_плану, Дисциплины_профиля.Контакт_часы, Дисциплины_профиля.Аудиторные, Дисциплины_профиля.Самостоятельная_работа, Дисциплины_профиля.Контроль, Дисциплины_профиля.Элект_часы, Дисциплины_профиля.Интер_часы, Дисциплины_профиля.Закрепленная_кафедра, Дисциплины_профиля.Код_профиля FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код)=" + ID + "));";
+            BD.command.CommandText = "SELECT Дисциплины_профиля.Дисциплины, Дисциплины_профиля.Индекс,Дисциплины_профиля.Код_направления_подготовки, Дисциплины_профиля.Факт_по_зет, Дисциплины_профиля.По_плану, Дисциплины_профиля.Контакт_часы, Дисциплины_профиля.Аудиторные, Дисциплины_профиля.Самостоятельная_работа, Дисциплины_профиля.Контроль, Дисциплины_профиля.Элект_часы, Дисциплины_профиля.Интер_часы, Дисциплины_профиля.Закрепленная_кафедра, Дисциплины_профиля.Код_профиля, Дисциплины_профиля.Код FROM Дисциплины_профиля WHERE (((Дисциплины_профиля.Код)=" + ID + "));";
             BD.reader = BD.command.ExecuteReader();
             while (BD.reader.Read())
             {
+                DA.Id_disp = Convert.ToInt32(BD.reader["Код"]);
                 DA.Naim = BD.reader["Дисциплины"].ToString();
                 DA.Index = BD.reader["Индекс"].ToString();
                 DA.Fact = Convert.ToInt32(BD.reader["Факт_по_зет"]);
@@ -570,6 +575,7 @@ namespace RPD
                 ID_Napr = Convert.ToInt32(BD.reader["Код_направления_подготовки"]);
             }
             BD.reader.Close();
+            // Запись направление подготовки и стандарт
             BD.command.CommandText = "SELECT Направление_подготовки.Код, Направление_подготовки.Направление_подготовки, Направление_подготовки.Станд FROM Направление_подготовки WHERE (((Направление_подготовки.Код)="+ID_Napr+"));";
             BD.reader = BD.command.ExecuteReader();
             while (BD.reader.Read())
@@ -578,10 +584,79 @@ namespace RPD
                 DA.Standart = BD.reader["Станд"].ToString();
             }
             BD.reader.Close();
+            // Запись "Виды деятельности"
+            BD.command.CommandText = "SELECT Виды_дейтельности.Список_дейтельности FROM Виды_дейтельности WHERE (((Виды_дейтельности.Код_направления_подготовки)=" + ID_Napr + "));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.MyList(BD.reader["Список_дейтельности"].ToString());
+            }
+            BD.reader.Close();
+            // Запись часов по СЕМЕСТРАМ
+            BD.command.CommandText = "SELECT Семестр.Номер_семестра, Семестр.ZET, Семестр.Итого, Семестр.Лек, Семестр.Лек_инт, Семестр.Лаб, Семестр.Лаб_инт, Семестр.ПР, Семестр.ПР_инт, Семестр.Элек, Семестр.СР, Семестр.Часы_конт, Семестр.Часы_конт_электр, Семестр.Экзамен, Семестр.Зачет, Семестр.Зачет_с_оценкой, Семестр.Курсовая FROM Семестр WHERE (((Семестр.Код_дисциплины)="+DA.Id_disp+"));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.LS = Convert.ToInt32(BD.reader["Номер_семестра"]);
+                DA._ZET(DA.LS,Convert.ToInt32(BD.reader["ZET"]));
+                DA._Itogo(DA.LS, Convert.ToInt32(BD.reader["Итого"]));
+                DA._Lekc(DA.LS, Convert.ToInt32(BD.reader["Лек"]));
+                DA._LekcInter(DA.LS, Convert.ToInt32(BD.reader["Лек_инт"]));
+                DA._Lab(DA.LS, Convert.ToInt32(BD.reader["Лаб"]));
+                DA._LabInter(DA.LS, Convert.ToInt32(BD.reader["Лаб_инт"]));
+                DA._Practice(DA.LS, Convert.ToInt32(BD.reader["ПР"]));
+                DA._PractInter(DA.LS, Convert.ToInt32(BD.reader["ПР_инт"]));
+                DA._Elect(DA.LS, Convert.ToInt32(BD.reader["Элек"]));
+                DA._SR1(DA.LS, Convert.ToInt32(BD.reader["СР"]));
+                DA._HoursCont(DA.LS, Convert.ToInt32(BD.reader["Часы_конт"]));
+                DA._HoursContElect(DA.LS, Convert.ToInt32(BD.reader["Часы_конт_электр"]));
+
+                if (Convert.ToBoolean(BD.reader["Экзамен"]) == true)
+                {
+                    DA._Examen(DA.LS);
+                }
+                if (Convert.ToBoolean(BD.reader["Зачет"]) == true)
+                {
+                    DA._Zachet(DA.LS);
+                }
+                if (Convert.ToBoolean(BD.reader["Зачет_с_оценкой"]) == true)
+                {
+                    DA._Dif_Zachet(DA.LS);
+                }
+
+                DA.KR = Convert.ToInt32(BD.reader["Курсовая"]);
+
+            }
+            BD.reader.Close();
+            // Запись компетенций дисцп
+            BD.command.CommandText = "SELECT Компетенции_дисциплины.Код_дисциплины, Компетенции.Компетенция, Компетенции.Содержание FROM Компетенции INNER JOIN Компетенции_дисциплины ON Компетенции.Код = Компетенции_дисциплины.Код_компетенции WHERE (((Компетенции_дисциплины.Код_дисциплины)="+DA.Id_disp+"));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.AddCompet(BD.reader["Компетенция"].ToString());
+                DA._InfoCompet(BD.reader["Содержание"].ToString());
+            }
+            BD.reader.Close();
+            // Запись Дисцп ДО
+            BD.command.CommandText = "SELECT Дисциплина_до.Дисциплина_до FROM Дисциплина_до WHERE (((Дисциплина_до.Код_дисциплины)=" + DA.Id_disp + "));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.AddPreDis(BD.reader["Дисциплина_до"].ToString());            
+            }
+            BD.reader.Close();
+            // Запись Дисцп ПОСЛЕ
+            BD.command.CommandText = "SELECT Дисциплина_после.Дисциплина_после FROM Дисциплина_после WHERE (((Дисциплина_после.Код_дисциплины)=" + DA.Id_disp + "));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.AddAfterDis(BD.reader["Дисциплина_после"].ToString());
+            }
+            BD.reader.Close();
+            
 
         }
 
->>>>>>> 81942e41a19e1da270749e3f1b48c85fe48778ee
     }
 }
     

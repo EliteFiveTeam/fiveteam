@@ -18,8 +18,6 @@ namespace RPD
     {
         connection_to_bd BD = new connection_to_bd();
         Plan PL; // Переменная структуры "Титул"
-        DataAccess DA;
-        word.Application WordApp;
         FormWord FW = new FormWord();
        
        
@@ -45,7 +43,7 @@ namespace RPD
         private void bt_createRP_Click(object sender, EventArgs e)
         {
             
-            FW.Show();
+            FW.ShowDialog();
         }
 
         private void bt_addprof_Click(object sender, EventArgs e)
@@ -68,7 +66,7 @@ namespace RPD
             BD.reader.Close();
             lst_prof.Items.Clear();
             clst_disc.Items.Clear();
-            Thread.Sleep(500);
+            Thread.Sleep(500); // остановка потока для обращения к БД
             DataBase();
         }
 

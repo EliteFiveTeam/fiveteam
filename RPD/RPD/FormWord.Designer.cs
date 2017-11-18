@@ -112,9 +112,8 @@
             this.rtb_ForExam.Location = new System.Drawing.Point(0, 0);
             this.rtb_ForExam.Name = "rtb_ForExam";
             this.rtb_ForExam.Size = new System.Drawing.Size(900, 421);
-            this.rtb_ForExam.TabIndex = 17;
+            this.rtb_ForExam.TabIndex = 0;
             this.rtb_ForExam.Text = "";
-            this.rtb_ForExam.TextChanged += new System.EventHandler(this.rtb_ForExam_TextChanged);
             // 
             // textBox2
             // 
