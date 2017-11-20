@@ -118,6 +118,202 @@ namespace RPD
         {
 
         }
+        public void Replace_Words_in_Pattern()
+        {
+            Microsoft.Office.Interop.Word.Range r;
+            r = WordApp.ActiveDocument.Range();
+            r.Find.ClearFormatting(); //Сброс форматирований из предыдущих операций поиска 
+            r.Find.Forward = true;
+            r.Find.Format = true;
+            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+
+            ///*Здесь и далее замена ключевых слов в копии шаблона(РП) на нужные значения их excel и word*/
+
+        }
+
+        public bool AnalysisPattern(bool Flag)
+        {
+            Microsoft.Office.Interop.Word.Range r;
+            r = WordApp.ActiveDocument.Range();
+            r.Find.ClearFormatting(); //Сброс форматирований из предыдущих операций поиска 
+            r.Find.Forward = true;
+            r.Find.Format = true;
+            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
+            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
+            Flag = false;
+            r.Find.Text = "#Индекс";
+            string SearhWord1 = r.Find.Text;
+            if (r.Find.Execute(SearhWord1) == true)
+            {
+                r.Find.Text = "#Дисциплина";
+                string SearhWord2 = r.Find.Text;
+                if (r.Find.Execute(SearhWord2) == true)
+                {
+
+                    r.Find.Text = "#Направление";
+                    string SearhWord3 = r.Find.Text;
+                    if (r.Find.Execute(SearhWord3) == true)
+                    {
+                        r.Find.Text = "#ДатаФГОС";
+                        string SearhWord4 = r.Find.Text;
+                        if (r.Find.Execute(SearhWord4) == true)
+                        {
+                            r.Find.Text = "#НомерФГОС";
+                            string SearhWord5 = r.Find.Text;
+                            if (r.Find.Execute(SearhWord5) == true)
+                            {
+                                r.Find.Text = "#Цели";
+                                string SearhWord6 = r.Find.Text;
+                                if (r.Find.Execute(SearhWord6) == true)
+                                {
+                                    r.Find.Text = "#Задачи";
+                                    string SearhWord7 = r.Find.Text;
+                                    if (r.Find.Execute(SearhWord7) == true)
+                                    {
+                                        r.Find.Text = "#Часть";
+                                        string SearhWord8 = r.Find.Text;
+                                        if (r.Find.Execute(SearhWord8) == true)
+                                        {
+                                            r.Find.Text = "#ДисциплиныДО";
+                                            string SearhWord9 = r.Find.Text;
+                                            if (r.Find.Execute(SearhWord9) == true)
+                                            {
+                                                r.Find.Text = "#ЗнатьДО";
+                                                string SearhWord10 = r.Find.Text;
+                                                if (r.Find.Execute(SearhWord10) == true)
+                                                {
+                                                    r.Find.Text = "#УметьДО";
+                                                    string SearhWord11 = r.Find.Text;
+                                                    if (r.Find.Execute(SearhWord11) == true)
+                                                    {
+                                                        r.Find.Text = "#ВладетьДО";
+                                                        string SearhWord12 = r.Find.Text;
+                                                        if (r.Find.Execute(SearhWord12) == true)
+                                                        {
+                                                            r.Find.Text = "#ДисциплиныПосле";
+                                                            string SearhWord13 = r.Find.Text;
+                                                            if (r.Find.Execute(SearhWord13) == true)
+                                                            {
+                                                                r.Find.Text = "#зе";
+                                                                string SearhWord14 = r.Find.Text;
+                                                                if (r.Find.Execute(SearhWord14) == true)
+                                                                {
+                                                                    r.Find.Text = "#че";
+                                                                    string SearhWord15 = r.Find.Text;
+                                                                    if (r.Find.Execute(SearhWord15) == true)
+                                                                    {
+                                                                        r.Find.Text = "#конт";
+                                                                        string SearhWord16 = r.Find.Text;
+                                                                        if (r.Find.Execute(SearhWord16) == true)
+                                                                        {
+                                                                            r.Find.Text = "#аудит";
+                                                                            string SearhWord17 = r.Find.Text;
+                                                                            if (r.Find.Execute(SearhWord17) == true)
+                                                                            {
+                                                                                r.Find.Text = "#лек";
+                                                                                string SearhWord18 = r.Find.Text;
+                                                                                if (r.Find.Execute(SearhWord18) == true)
+                                                                                {
+                                                                                    r.Find.Text = "#лаб";
+                                                                                    string SearhWord19 = r.Find.Text;
+                                                                                    if (r.Find.Execute(SearhWord19) == true)
+                                                                                    {
+                                                                                        r.Find.Text = "#пр";
+                                                                                        string SearhWord20 = r.Find.Text;
+                                                                                        if (r.Find.Execute(SearhWord20) == true)
+                                                                                        {
+                                                                                            r.Find.Text = "#инт";
+                                                                                            string SearhWord21 = r.Find.Text;
+                                                                                            if (r.Find.Execute(SearhWord21) == true)
+                                                                                            {
+                                                                                                r.Find.Text = "#эл";
+                                                                                                string SearhWord22 = r.Find.Text;
+                                                                                                if (r.Find.Execute(SearhWord22) == true)
+                                                                                                {
+                                                                                                    r.Find.Text = "#срс";
+                                                                                                    string SearhWord23 = r.Find.Text;
+                                                                                                    if (r.Find.Execute(SearhWord23) == true)
+                                                                                                    {
+                                                                                                        r.Find.Text = "#контр";
+                                                                                                        string SearhWord24 = r.Find.Text;
+                                                                                                        if (r.Find.Execute(SearhWord24) == true)
+                                                                                                        {
+                                                                                                            r.Find.Text = "#Основная_л";
+                                                                                                            string SearhWord25 = r.Find.Text;
+                                                                                                            if (r.Find.Execute(SearhWord25) == true)
+                                                                                                            {
+                                                                                                                r.Find.Text = "#Дополнит_л";
+                                                                                                                string SearhWord26 = r.Find.Text;
+                                                                                                                if (r.Find.Execute(SearhWord26) == true)
+                                                                                                                {
+                                                                                                                    r.Find.Text = "#Посещение балла";
+                                                                                                                    string SearhWord27 = r.Find.Text;
+                                                                                                                    if (r.Find.Execute(SearhWord27) == true)
+                                                                                                                    {
+                                                                                                                        rtb_Log.AppendText("Шаблон корректен\n", Color.Green);
+                                                                                                                        return Flag = true;
+                                                                                                                    }
+                                                                                                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                                                }
+                                                                                                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                                            }
+                                                                                                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                                        }
+                                                                                                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                                    }
+                                                                                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                                }
+                                                                                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                            }
+                                                                                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                        }
+                                                                                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                    }
+                                                                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                                }
+                                                                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                            }
+                                                                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                        }
+                                                                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                    }
+                                                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                                }
+                                                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                            }
+                                                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                        }
+                                                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                    }
+                                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                                }
+                                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                            }
+                                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                        }
+                                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                    }
+                                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                                }
+                                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                            }
+                            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                        }
+                        else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                    }
+                    else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+                }
+                else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+            }
+            else { rtb_Log.AppendText("Шаблон некорректен\n", Color.Red); }
+            return Flag = false;
+
+
+
+
+
+        }
         private void AnalysisOldProgramm()
         {
             string Filename_;
@@ -509,6 +705,8 @@ namespace RPD
             WordApp = new word.Application(); // создаем объект word;
             FormMain FM = new FormMain();
             string Check = FileNaim;
+            WordApp.Documents.Add(Check);
+            WordApp.Visible = true;
             
         }
         
@@ -535,6 +733,11 @@ namespace RPD
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
+            CreateNewProgram();
+            if (AnalysisPattern(true))
+            {
+                /*Если шаблон вернёт значение true, то он корректен и мы можем приступить к замене слов(для замены создан специальный метод выше)*/
+            }
         }
 
         private void rtb_Tems_TextChanged(object sender, EventArgs e)
