@@ -159,6 +159,7 @@
             this.bt_select_anat.TabIndex = 21;
             this.bt_select_anat.Text = "Открыть";
             this.bt_select_anat.UseVisualStyleBackColor = true;
+            this.bt_select_anat.Click += new System.EventHandler(this.bt_select_anat_Click);
             // 
             // bt_select_fos
             // 
@@ -168,6 +169,7 @@
             this.bt_select_fos.TabIndex = 20;
             this.bt_select_fos.Text = "Открыть";
             this.bt_select_fos.UseVisualStyleBackColor = true;
+            this.bt_select_fos.Click += new System.EventHandler(this.bt_select_fos_Click);
             // 
             // lb_anat
             // 
@@ -204,7 +206,7 @@
             this.lb_rp.Name = "lb_rp";
             this.lb_rp.Size = new System.Drawing.Size(152, 13);
             this.lb_rp.TabIndex = 16;
-            this.lb_rp.Text = "Шаболн рабочей программы";
+            this.lb_rp.Text = "Шаблон рабочей программы";
             // 
             // openFileWord
             // 

@@ -19,11 +19,29 @@ namespace RPD
         connection_to_bd BD = new connection_to_bd();
         DataAccess DA;
         private string _FileNaim;
+        private string _FileNaim_FOS;
+        private string _FileNaim_ANAT;
+        private int _ID_Prof;
+        public int ID_Prof // id профиля
+        {
+            get { return _ID_Prof; }
+            set { _ID_Prof = value; }
+        }
         private int _ID;
         public string FileNaim // путь к шаблону НРП
         {
             get { return _FileNaim; }
             set { _FileNaim = value; }
+        }
+        public string FileNaim_FOS // путь к шаблону НРП
+        {
+            get { return _FileNaim_FOS; }
+            set { _FileNaim_FOS = value; }
+        }
+        public string FileNaim_ANAT // путь к шаблону НРП
+        {
+            get { return _FileNaim_ANAT; }
+            set { _FileNaim_ANAT = value; }
         }
         public int ID
         {
@@ -699,14 +717,69 @@ namespace RPD
 
 
         }
-      
+
+        private void FindReplace(string str_old, string str_new) // Замена фрагментов текста длинными кусками(больше 246 символ)
+        {
+            Microsoft.Office.Interop.Word.Range r;//Range
+            r = WordApp.ActiveDocument.Range();
+            r.Find.Text = str_old; // Находим слово которое нужно заменить
+            if (str_new.Length > 246) // Проверка если длинна слова больше 246 символов 
+            {
+                string Str_long = str_new; // новая переменная для работы с кусками текста
+                while (Str_long.Length > 0) // разьбиение строки на фрагменты и добавление в НРП
+                {
+                    if (Str_long.Length > 246) 
+                    {
+                        r.Find.Replacement.Text = Str_long.Substring(0, 245) + "<Text>"; 
+                        Str_long = Str_long.Substring(245, Str_long.Length - 245);
+                        r.Find.Execute(r.Find.Text, Replace: word.WdReplace.wdReplaceAll);
+                        r.Find.Text = "<Text>"; // хештег для поиска замены
+                    }
+                    else // если осталось меньше 246, добавляем последний кусок текста
+                    {
+                        r.Find.Replacement.Text = Str_long.Substring(0, Str_long.Length);
+                        r.Find.Execute(r.Find.Text, Replace: word.WdReplace.wdReplaceAll);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                r.Find.Replacement.Text = str_new;
+                r.Find.Execute(r.Find.Text, Replace: word.WdReplace.wdReplaceAll);
+            }
+            
+        }
+
         private void CreateNewProgram() // работа с Новой РП
         {
             WordApp = new word.Application(); // создаем объект word;
             FormMain FM = new FormMain();
-            string Check = FileNaim;
-            WordApp.Documents.Add(Check);
+            string NRP = FileNaim;
+            string FOS = FileNaim_FOS;
+            string ANAT = FileNaim_ANAT;
+            WordApp.Documents.Add(FileNaim);
+            if (FileNaim_FOS != null)
+            {
+                WordApp.Documents.Add(FileNaim_FOS);
+            }
+            if (FileNaim_ANAT != null)
+            {
+                WordApp.Documents.Add(FileNaim_ANAT);
+            }
+            string Name_NRP = DA.Index + "_" +DA.Naim + "_" + DA.Profile + ".docx";
+            WordApp.ActiveDocument.SaveAs2(Name_NRP);
             WordApp.Visible = true;
+            FindReplace("#Направление", DA.Napr);
+            FindReplace("#Индекс", DA.Index);
+            FindReplace("#Дисциплина", DA.Naim);
+            FindReplace("#Профиль", DA.Profile);
+            FindReplace("#Цели", D.Cel);
+            WordApp.ActiveDocument.Save();
+            
+            
+
+            
             
         }
         
@@ -733,11 +806,11 @@ namespace RPD
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
-            CreateNewProgram();
-            if (AnalysisPattern(true))
-            {
-                /*Если шаблон вернёт значение true, то он корректен и мы можем приступить к замене слов(для замены создан специальный метод выше)*/
-            }
+          
+            //if (AnalysisPattern(true))
+            //{
+            //    /*Если шаблон вернёт значение true, то он корректен и мы можем приступить к замене слов(для замены создан специальный метод выше)*/
+            //}
         }
 
         private void rtb_Tems_TextChanged(object sender, EventArgs e)
@@ -785,6 +858,15 @@ namespace RPD
             {
                 DA.Napr = BD.reader["Направление_подготовки"].ToString();
                 DA.Standart = BD.reader["Станд"].ToString();
+            }
+            BD.reader.Close();
+            // Запись профиль и год
+            BD.command.CommandText = "SELECT Профиль.Название_профиля, Профиль.Год_профиля FROM Профиль WHERE (((Профиль.Код)="+ID_Prof+"));";
+            BD.reader = BD.command.ExecuteReader();
+            while (BD.reader.Read())
+            {
+                DA.Profile = BD.reader["Название_профиля"].ToString();
+                DA.Year = BD.reader["Год_профиля"].ToString();
             }
             BD.reader.Close();
             // Запись "Виды деятельности"

@@ -114,7 +114,7 @@ namespace RPD
         {
             
                 /* Открываем файл Excel и считываем информацию с первого листа "Титул" */
-
+                bool Prov_on_double = true;
                 string Fname;
                 int NS;
                 excel.Application ExcelApp = new excel.Application(); // создаем объект excel;
@@ -238,6 +238,18 @@ namespace RPD
                     {
                         Action Progress = () => { RTB_ExcelLog.AppendText("Профиль не найден!\n", Color.Red); }; Invoke(Progress);
                     }
+                    //BD.Connect(); //проверка на дюблирование
+                    //BD.command.CommandText = "SELECT Профиль.Код FROM Профиль WHERE (((Профиль.Название_профиля)='"+PL.Profile+"') AND ((Профиль.Год_профиля)="+PL.Year+"));";
+                    //int jdfbier = BD.command.ExecuteNonQuery();
+                    //if (jdfbier!=0)
+                    //{
+                    //    Action Progress = () => { MessageBox.Show("данные есть"); }; Invoke(Progress);
+                    //    Prov_on_double = false;
+                    //}
+                    //else
+                    //{
+                    //    Action Progress = () => { MessageBox.Show("данных нет"); }; Invoke(Progress);
+                    //}
 
                 }
                 int J; // переменная номера столбца
