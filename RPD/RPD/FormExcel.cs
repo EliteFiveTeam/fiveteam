@@ -19,6 +19,7 @@ namespace RPD
         Plan PL; // Переменная структуры "Титул"
         PlanTime[] PLtime = new PlanTime[150]; // Переменная структуры "План"
         connection_to_bd BD = new connection_to_bd();
+        string FileNaim;
         
         public FormExcel()
         {
@@ -114,15 +115,16 @@ namespace RPD
         {
             
                 /* Открываем файл Excel и считываем информацию с первого листа "Титул" */
-                bool Prov_on_double = true;
-                string Fname;
                 int NS;
                 excel.Application ExcelApp = new excel.Application(); // создаем объект excel;
                 ExcelApp.Visible = false; // показывает или скрывает файл Excel;
-                openFileExcel.Filter = "Файлы Excel(*.xls)|*.xls|Excel(*.xls)|*.xls"; 
-                Action action = () => { openFileExcel.ShowDialog(); }; Invoke(action);  // Запуск главного потока 
-                Fname = openFileExcel.FileName;
-                ExcelApp.Workbooks.Add(Fname); // загружаем в excel файл с рабочей книгой
+                openFileExcel.Filter = "Файлы Excel(*.xls)|*.xls|Excel(*.xls)|*.xls";
+                Action action = () => { if (openFileExcel.ShowDialog() == DialogResult.OK) { FileNaim = openFileExcel.FileName; } }; Invoke(action);  // Запуск главного потока 
+                if (FileNaim == null)
+                {
+                    return;
+                }
+                ExcelApp.Workbooks.Add(FileNaim); // загружаем в excel файл с рабочей книгой
                 Action action1 = () => { bt_selct_excel.Enabled = false; }; Invoke(action1);
                 excel.Sheets excelsheets; // объявление переменных хранящих листы книги
                 excel.Worksheet excelworksheet;
@@ -238,19 +240,16 @@ namespace RPD
                     {
                         Action Progress = () => { RTB_ExcelLog.AppendText("Профиль не найден!\n", Color.Red); }; Invoke(Progress);
                     }
-                    //BD.Connect(); //проверка на дюблирование
-                    //BD.command.CommandText = "SELECT Профиль.Код FROM Профиль WHERE (((Профиль.Название_профиля)='"+PL.Profile+"') AND ((Профиль.Год_профиля)="+PL.Year+"));";
-                    //int jdfbier = BD.command.ExecuteNonQuery();
-                    //if (jdfbier!=0)
-                    //{
-                    //    Action Progress = () => { MessageBox.Show("данные есть"); }; Invoke(Progress);
-                    //    Prov_on_double = false;
-                    //}
-                    //else
-                    //{
-                    //    Action Progress = () => { MessageBox.Show("данных нет"); }; Invoke(Progress);
-                    //}
-
+                    BD.Connect(); //проверка на дюблирование 
+                    BD.command.CommandText = "SELECT Count([Профиль]![Код]) AS Выражение1 FROM Профиль WHERE (((Профиль.Название_профиля)='" + PL.Profile + "') AND ((Профиль.Год_профиля)='" + PL.Year + "'));";
+                    // int ertert = BD.command.ExecuteNonQuery(); 
+                    var prof_double = Convert.ToInt32(BD.command.ExecuteScalar());
+                    if (prof_double != 0)
+                    {
+                        Action Progress = () => { MessageBox.Show("Выбранный вами профиль: "+PL.Profile + " " + PL.Year + " уже существует в базе данных, вернитесь в главное окно чтобы удалить и перезаписать данный профиль", "Ошибка",MessageBoxButtons.OK,MessageBoxIcon.Exclamation); }; Invoke(Progress);
+                        return;
+                    }
+                   
                 }
                 int J; // переменная номера столбца
                 int SN = 1; // переменная номера ячейки со словом "Виды"

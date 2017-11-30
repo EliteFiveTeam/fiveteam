@@ -48,7 +48,7 @@ namespace RPD
     {
         public string Naim { get; set; } // Наименование предмета 
         public string Index { get; set; } // Индекс предмета 
-        public int Fact { get; set; } // Факт по ЗЕТ  
+        public int Fact { get; set; } // Факт по ЗЕТ  *36 = кол во часов
         public int AtPlan { get; set; } // По плану 
         public int ContactHours { get; set; } // Контакт часы 
         public int Aud { get; set; } // Ауд.

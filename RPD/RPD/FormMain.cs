@@ -28,6 +28,10 @@ namespace RPD
         {
             InitializeComponent();
             DataBase();
+            if (lst_prof.Items.Count > 0)
+            {
+                lst_prof.SetSelected(0, true);
+            }
         }
         public void DataBase() // Добавление в ListBox1
         {

@@ -515,18 +515,25 @@ namespace RPD
                     {
                         if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(texttable))
                         {
-
+                            
+                            int k = 0; // счетчик кол-во тем
                             Action Progress = () => { rtb_Log.AppendText("Таблица с темой " + i + " считана\n", Color.Green); }; Invoke(Progress);
                             for (int n = 2; n <= WordApp.ActiveDocument.Tables[i].Rows.Count; n++)
                             {
+                                
                                 if (WordApp.ActiveDocument.Tables[i].Rows[n].Cells.Count >= 5)
                                 {
-                                    D.tems[i - 2].Name = WordApp.ActiveDocument.Tables[i].Cell(n, 2).Range.Text;
-                                    D.tems[i - 2].Text = WordApp.ActiveDocument.Tables[i].Cell(n, 3).Range.Text;
-                                    D.tems[i - 2].Rez = WordApp.ActiveDocument.Tables[i].Cell(n, 5).Range.Text;
-                                    D.tems[i - 2].FormZ = WordApp.ActiveDocument.Tables[i].Cell(n, 6).Range.Text;
-                                    CountTems++;
+                                    if (WordApp.ActiveDocument.Tables[i].Rows[n].Cells[2].Range.Text.Length >3) // проверка пустых значений названий тем
+                                    {
+                                        D.tems[k].Name = WordApp.ActiveDocument.Tables[i].Cell(n, 2).Range.Text;
+                                        D.tems[k].Text = WordApp.ActiveDocument.Tables[i].Cell(n, 3).Range.Text;
+                                        D.tems[k].Rez = WordApp.ActiveDocument.Tables[i].Cell(n, 5).Range.Text;
+                                        D.tems[k].FormZ = WordApp.ActiveDocument.Tables[i].Cell(n, 6).Range.Text;
+                                        CountTems++;
+                                        k++; // кол-во тем
+                                    }
                                 }
+                                
                             }
                             break;
                         }
@@ -775,6 +782,38 @@ namespace RPD
             FindReplace("#Дисциплина", DA.Naim);
             FindReplace("#Профиль", DA.Profile);
             FindReplace("#Цели", D.Cel);
+            FindReplace("#Задачи", D.Tasks);
+            foreach(string s in DA.PreDis)
+            {
+            FindReplace("#ДисциплиныДО", s);
+            }
+            FindReplace("#ЗнатьДО", D.Zn_before);
+            FindReplace("#УметьДО", D.Um_before);
+            FindReplace("#ВладетьДО", D.Vl_before);
+            foreach (string s in DA.AfterDis)
+            {
+                FindReplace("#ДисциплиныПосле", s);
+            }
+            string FindTable = "Наименование темы дисциплины";
+            for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
+            {
+                if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTable))
+                {
+                    for (int z = 2; z <= D.Nt+1; z++) // z - номер строки в таблице с темами
+                    {
+                        
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z-2].Name;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z-2].Text;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z-2].Rez;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = D.tems[z-2].Comp;
+                        // WordApp.ActiveDocument.Tables[i].Cell(z,2).Range.Text = D.tems[z].Name;
+                        if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                    }
+                }
+            }
+
+
+           
             WordApp.ActiveDocument.Save();
             
             
