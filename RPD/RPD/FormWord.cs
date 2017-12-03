@@ -428,7 +428,7 @@ namespace RPD
                 }
                 else
                 {
-                    Action Progress = () => { rtb_Log.AppendText("Основная литература не найдена\n", Color.Red); }; Invoke(Progress);
+                    Action Progress = () => { rtb_Log.AppendText("Дополнительная литература не найдена\n", Color.Red); }; Invoke(Progress);
                 }
 
             } // поиск закончился, литература записана в массив
@@ -647,16 +647,19 @@ namespace RPD
                     r.Start = r.Start + exstr1.Length;
                     r.End = r.End - exstr3.Length;
                     int exm21 = r.ListParagraphs.Count;
-                    object Start = r.ListParagraphs[1].Range.Start;
-                    object End = r.ListParagraphs[exm21].Range.End;
-                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
-                    myRange.Copy();
-                    rtb_ForExam.Paste();
-                    rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green); 
-                    for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                    if (exm21 != 0)
                     {
-                        string dfs = r.ListParagraphs[y].Range.Text;
-                        D.MyForExamAdd(dfs);
+                        object Start = r.ListParagraphs[1].Range.Start;
+                        object End = r.ListParagraphs[exm21].Range.End;
+                        word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                        myRange.Copy();
+                        rtb_ForExam.Paste();
+                        rtb_Log.AppendText("Вопросы к экзамену/зачёту считаны\n", Color.Green);
+                        for (int y = 1; y <= r.ListParagraphs.Count; y++)
+                        {
+                            string dfs = r.ListParagraphs[y].Range.Text;
+                            D.MyForExamAdd(dfs);
+                        }
                     }
 
                 }
@@ -679,16 +682,23 @@ namespace RPD
                     r.Start = r.Start + exstr1.Length;
                     r.End = r.End - exstr2.Length;
                     int exm21 = r.ListParagraphs.Count;
+                    if (exm21 != 0)
+                    {
                     object Start = r.ListParagraphs[1].Range.Start;
                     object End = r.ListParagraphs[exm21].Range.End;
                     word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
                     myRange.Copy();
                     rtb_ForExam.Paste();
-                    rtb_Log.AppendText("Вопросы к экзамену считаны\n", Color.Green);
+                    rtb_Log.AppendText("Вопросы к экзамену/зачёту считаны\n", Color.Green);
                     for (int y = 1; y <= r.ListParagraphs.Count; y++)
                     {
                         string dfs = r.ListParagraphs[y].Range.Text;
                         D.MyForExamAdd(dfs);
+                    }
+                    }
+                    else
+                    {
+                        rtb_Log.AppendText("Некоррекнтый список вопросов к экзамену/зачёту\n", Color.Red);
                     }
                 }
             }
@@ -709,12 +719,15 @@ namespace RPD
                     r.Start = r.Start;
                     r.End = r.End - exstr2.Length;
                     int exm21 = r.Paragraphs.Count;
-                    object Start = r.Paragraphs[1].Range.Start;
-                    object End = r.Paragraphs[exm21].Range.End;
-                    word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
-                    myRange.Copy();
-                    rtb_ForExam.Paste();
-                    rtb_Log.AppendText("Итоговый контроль найден\n", Color.Green); 
+                    if (exm21 != 0)
+                    {
+                        object Start = r.Paragraphs[1].Range.Start;
+                        object End = r.Paragraphs[exm21].Range.End;
+                        word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+                        myRange.Copy();
+                        rtb_ForExam.Paste();
+                        rtb_Log.AppendText("Итоговый контроль найден\n", Color.Green);
+                    }
                 }
             }
             else
@@ -724,7 +737,25 @@ namespace RPD
 
 
         }
+        private void ReplBookmark(string NameBookMark, ref RichTextBox rt, ref Microsoft.Office.Interop.Word.Application Word1) // Замена закладки форматированным текстом из richtextbox-a
+        {
+            System.Drawing.Font cfont;
+            rt.SelectAll();
+            cfont = rt.SelectionFont;
+            rt.Copy();
+            Word1.Selection.Find.ClearFormatting();
+            Word1.Selection.Find.Text = NameBookMark;
+            Word1.Selection.Find.Execute();
+            Word1.Selection.Font.Name = "Times New Roman";
+            if (Clipboard.GetText() != null) 
+            {
+                Word1.Selection.Paste();
+            }
 
+        //' возвращаем курсор в начало документа
+            Word1.Selection.Range.Start = 1;
+            Word1.Selection.Range.End = 1;
+        }
         private void FindReplace(string str_old, string str_new) // Замена фрагментов текста длинными кусками(больше 246 символ)
         {
             Microsoft.Office.Interop.Word.Range r;//Range
@@ -794,6 +825,11 @@ namespace RPD
             {
                 FindReplace("#ДисциплиныПосле", s);
             }
+
+            ReplBookmark("#Основная литература", ref rtb_LiteraBasic, ref WordApp);
+            ReplBookmark("#Дополнительная литература", ref rtb_Add_Litera, ref WordApp);
+            ReplBookmark("#Перечень УМО", ref rtb_Tems, ref WordApp);
+            
             string FindTable = "Наименование темы дисциплины";
             for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
             {
@@ -806,7 +842,7 @@ namespace RPD
                         WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z-2].Text;
                         WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z-2].Rez;
                         WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = D.tems[z-2].Comp;
-                        // WordApp.ActiveDocument.Tables[i].Cell(z,2).Range.Text = D.tems[z].Name;
+                        WordApp.ActiveDocument.Tables[i].Cell(z,6).Range.Text = D.tems[z].FormZ;
                         if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
                     }
                 }
@@ -820,6 +856,19 @@ namespace RPD
 
             
             
+        }
+        
+        private void Clear_Old_RP() // Очищает Анализ старой рп
+        {
+            Clipboard.Clear();
+            rtb_Log.Clear();
+            rtb_LiteraBasic.Clear();
+            rtb_Add_Litera.Clear();
+            rtb_ForExam.Clear();
+            rtb_Tems.Clear();
+            btn_OpenWp.Enabled = true;
+
+
         }
         
         private void timer1_Tick(object sender, EventArgs e)
@@ -839,6 +888,15 @@ namespace RPD
         {
             AnalysisOldProgramm();
             WordApp.Quit();
+            if (btn_OpenWp.Enabled == false)
+            {
+                btn_Clear.Enabled = true;
+
+            }
+            else
+            {
+                btn_Clear.Enabled = false;
+            }
             
         }
 
@@ -979,6 +1037,12 @@ namespace RPD
             BD.reader.Close();
             
 
+        }
+
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            Clear_Old_RP();
+            btn_Clear.Enabled = false;
         }
 
     }

@@ -46,6 +46,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btn_Clear = new System.Windows.Forms.Button();
             this.tab_Analysis_Pr.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -208,11 +209,23 @@
             this.tabPage4.Text = "Дополнительная литература";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // btn_Clear
+            // 
+            this.btn_Clear.Enabled = false;
+            this.btn_Clear.Location = new System.Drawing.Point(16, 520);
+            this.btn_Clear.Name = "btn_Clear";
+            this.btn_Clear.Size = new System.Drawing.Size(154, 37);
+            this.btn_Clear.TabIndex = 26;
+            this.btn_Clear.Text = "Очистить";
+            this.btn_Clear.UseVisualStyleBackColor = true;
+            this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
+            // 
             // FormWord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1425, 653);
+            this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.tab_Analysis_Pr);
             this.Controls.Add(this.bt_create_newrp);
             this.Controls.Add(this.progressBar1);
@@ -252,5 +265,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button btn_Clear;
     }
 }
