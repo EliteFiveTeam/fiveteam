@@ -818,15 +818,69 @@ namespace RPD
             {
             FindReplace("#ДисциплиныДО", s);
             }
+           
             FindReplace("#ЗнатьДО", D.Zn_before);
             FindReplace("#УметьДО", D.Um_before);
             FindReplace("#ВладетьДО", D.Vl_before);
+            FindReplace("#зе", Convert.ToString(DA.Fact));
+            FindReplace("#че", Convert.ToString(DA.AtPlan));
+            FindReplace("#конт", Convert.ToString(DA.ContactHours));
+            FindReplace("#аудит", Convert.ToString(DA.Aud));
+            FindReplace("#срс", Convert.ToString(DA.SR));
+            FindReplace("#кконтр", Convert.ToString(DA.Contr));
+            FindReplace("#инт", Convert.ToString(DA.InterHours));
+            FindReplace("#эл", Convert.ToString(DA.ElectHours));
+            int Leck = 0;
+            for (int i = 0; i <= DA.Lekc.Length-1; i++)
+            {
+                Leck += DA.Lekc[i];
+            }
+            FindReplace("#лек", Convert.ToString(Leck));
+            int Lab = 0;
+            for (int i = 0; i <= DA.Lab.Length-1; i++)
+            {
+                Lab += DA.Lab[i];
+            }
+            FindReplace("#лаб", Convert.ToString(Lab));
+            int PR = 0;
+            for (int i = 0; i <= DA.Practice.Length-1; i++)
+            {
+                PR += DA.Practice[i];
+            }
+            FindReplace("#пр", Convert.ToString(PR));
+
             foreach (string s in DA.AfterDis)
             {
                 FindReplace("#ДисциплиныПосле", s);
             }
+            string Examen = "";
+            string Zachet = "";
+            string DifZachet = "";
 
-            ReplBookmark("#Основная литература", ref rtb_LiteraBasic, ref WordApp);
+            for (int i = 0; i <= DA.Examen.Length-1; i++)
+            {
+                if(DA.Examen[i] == true)
+                {
+                    Examen = "Экзамен; ";
+                }
+                if (DA.Dif_Zachet[i] == true)
+                {
+                    DifZachet = "Зачет с оценкой; ";
+                }
+                if (DA.Zachet[i] == true)
+                {
+                    Zachet = "Зачет; ";
+                }
+            }
+            FindReplace("#Аттестация", Examen + DifZachet + Zachet);
+            string Compet = "";
+                for(int i = 0; i<=DA.Compet.Count-1; i++)
+                {
+                    Compet += DA.Compet[i]+";";
+                }
+
+
+                ReplBookmark("#Основная литература", ref rtb_LiteraBasic, ref WordApp);
             ReplBookmark("#Дополнительная литература", ref rtb_Add_Litera, ref WordApp);
             ReplBookmark("#Перечень УМО", ref rtb_Tems, ref WordApp);
             
@@ -841,7 +895,7 @@ namespace RPD
                         WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z-2].Name;
                         WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z-2].Text;
                         WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z-2].Rez;
-                        WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = D.tems[z-2].Comp;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
                         WordApp.ActiveDocument.Tables[i].Cell(z,6).Range.Text = D.tems[z].FormZ;
                         if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
                     }
