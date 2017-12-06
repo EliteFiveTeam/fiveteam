@@ -50,6 +50,10 @@ namespace RPD
         } // id Дисциплины
         private int ID_Napr; // id Направление Подготовки
 
+        
+
+
+
         public static bool btn1;
         Tema tems;
         Discipline dis;
@@ -337,7 +341,7 @@ namespace RPD
             string Filename_;
             WordApp = new word.Application(); // создаем объект word;
             WordApp.Visible = true; // показывает или скрывает файл word;
-            openFileDialog1.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
+            //openFileDialog1.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
             Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);
             // фильтрует, оставляя только ворд файлы
             Filename_ = openFileDialog1.FileName;
@@ -835,6 +839,7 @@ namespace RPD
             {
                 Leck += DA.Lekc[i];
             }
+            
             FindReplace("#лек", Convert.ToString(Leck));
             int Lab = 0;
             for (int i = 0; i <= DA.Lab.Length-1; i++)
@@ -878,13 +883,14 @@ namespace RPD
                 {
                     Compet += DA.Compet[i]+";";
                 }
-
+                Compet = Compet.Substring(0, Compet.Length - 1);
 
                 ReplBookmark("#Основная литература", ref rtb_LiteraBasic, ref WordApp);
             ReplBookmark("#Дополнительная литература", ref rtb_Add_Litera, ref WordApp);
-            ReplBookmark("#Перечень УМО", ref rtb_Tems, ref WordApp);
+            ReplBookmark("Перечень_УМО", ref rtb_Tems, ref WordApp);
             
             string FindTable = "Наименование темы дисциплины";
+           
             for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
             {
                 if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTable))
@@ -900,8 +906,9 @@ namespace RPD
                         if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
                     }
                 }
+               
             }
-
+            TemPlan();
 
            
             WordApp.ActiveDocument.Save();
@@ -911,7 +918,83 @@ namespace RPD
             
             
         }
-        
+
+        private void TemPlan() // Заполнение ТЕМАТИЧЕСКИЙ ПЛАН ИЗУЧЕНИЯ ДИСЦИПЛИНЫ
+        {
+            List <int> CountSem = new List<int>(); // создать коллекций семестров
+            string FindTemPlan = "Наименование разделов и тем";
+            for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
+            {
+               
+                if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTemPlan))
+                {
+                    for(int n = 0; n<=DA.Examen.Length-1; n++)
+                    {
+                        if(DA.Examen[n] == true)
+                        {
+                            CountSem.Add(n + 1);
+                        }
+                        if (DA.Dif_Zachet[n] == true)
+                        {
+                            CountSem.Add(n + 1);
+                        }
+                        if (DA.Zachet[n] == true)
+                        {
+                            CountSem.Add(n + 1);
+                        }
+    
+                    }
+                    if (CountSem.Count > 1)
+                    {
+                        
+                        int DivideDist = D.tems.Length / CountSem.Count; // деление дисциплин на равное количество
+                        int RestDist = D.tems.Length % CountSem.Count; // остаток дисциплин при нечетном вычислении 
+                        //for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
+                        //{
+                            int resresh = 0;
+                            for (int d = 0; d <= CountSem.Count - 1; d++)
+                            {
+                                
+                                for (int y = resresh; resresh <= DivideDist - 1; resresh++)
+                                {
+                                    int a = WordApp.ActiveDocument.Tables[i].Rows.Count;
+                                    WordApp.ActiveDocument.Tables[i].Cell(resresh + 5, 2).Range.Text = D.tems[resresh].Name;
+                                    WordApp.ActiveDocument.Tables[i].Rows.Add();
+                                }
+                                resresh = DivideDist;
+                                DivideDist += DivideDist;
+                                
+                                
+                            }
+                                
+
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z - 2].Rez;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 6).Range.Text = D.tems[z].FormZ;
+                            //if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                        //}
+                    }
+                    else
+                    {
+                        for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
+                        {
+
+                            WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z - 2].Name;
+
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z - 2].Rez;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
+                            //WordApp.ActiveDocument.Tables[i].Cell(z, 6).Range.Text = D.tems[z].FormZ;
+                            if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                        }
+                        
+                    }
+
+                    
+             }   }
+        }
+
         private void Clear_Old_RP() // Очищает Анализ старой рп
         {
             Clipboard.Clear();
