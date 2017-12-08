@@ -18,6 +18,9 @@ namespace RPD
     {
         connection_to_bd BD = new connection_to_bd();
         DataAccess DA;
+        int Leck = 0;
+        int Lab = 0;
+        int PR = 0;
         private string _FileNaim;
         private string _FileNaim_FOS;
         private string _FileNaim_ANAT;
@@ -49,7 +52,8 @@ namespace RPD
             set { _ID = value; }
         } // id Дисциплины
         private int ID_Napr; // id Направление Подготовки
-
+        public List<int> TemInSem = new List<int>();
+        public List<string> ListControl = new List<string>(); // Запись по семестра вида контроля (Экзамен, зачет, диф зачет)
         
 
 
@@ -834,20 +838,20 @@ namespace RPD
             FindReplace("#кконтр", Convert.ToString(DA.Contr));
             FindReplace("#инт", Convert.ToString(DA.InterHours));
             FindReplace("#эл", Convert.ToString(DA.ElectHours));
-            int Leck = 0;
+            
             for (int i = 0; i <= DA.Lekc.Length-1; i++)
             {
                 Leck += DA.Lekc[i];
             }
             
             FindReplace("#лек", Convert.ToString(Leck));
-            int Lab = 0;
+            
             for (int i = 0; i <= DA.Lab.Length-1; i++)
             {
                 Lab += DA.Lab[i];
             }
             FindReplace("#лаб", Convert.ToString(Lab));
-            int PR = 0;
+            
             for (int i = 0; i <= DA.Practice.Length-1; i++)
             {
                 PR += DA.Practice[i];
@@ -858,10 +862,10 @@ namespace RPD
             {
                 FindReplace("#ДисциплиныПосле", s);
             }
-            string Examen = "";
-            string Zachet = "";
-            string DifZachet = "";
 
+            string Examen = "";
+            string DifZachet = "";
+            string Zachet = "";
             for (int i = 0; i <= DA.Examen.Length-1; i++)
             {
                 if(DA.Examen[i] == true)
@@ -928,11 +932,11 @@ namespace RPD
                
                 if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTemPlan))
                 {
-                    for(int n = 0; n<=DA.Examen.Length-1; n++)
+                    for(int n = 0; n<=DA.Examen.Length-1; n++) // цикл для определение ФОРМЫ КОНТРОЛЯ для текущего семестра
                     {
                         if(DA.Examen[n] == true)
                         {
-                            CountSem.Add(n + 1);
+                            CountSem.Add(n + 1); // записываю в коллекцию 
                         }
                         if (DA.Dif_Zachet[n] == true)
                         {
@@ -946,34 +950,103 @@ namespace RPD
                     }
                     if (CountSem.Count > 1)
                     {
-                        
-                        int DivideDist = D.tems.Length / CountSem.Count; // деление дисциплин на равное количество
-                        int RestDist = D.tems.Length % CountSem.Count; // остаток дисциплин при нечетном вычислении 
-                        //for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
-                        //{
+                        CountSem.Sort();
+                        int DivideDist = D.Nt / CountSem.Count; // деление дисциплин на равное количество
+                        int RestDist = D.Nt % CountSem.Count; // остаток дисциплин при нечетном вычислении 
+                        int a = 0;
                             int resresh = 0;
+                            int TemSem; // кол-во тем в семестре
                             for (int d = 0; d <= CountSem.Count - 1; d++)
                             {
-                                
-                                for (int y = resresh; resresh <= DivideDist - 1; resresh++)
-                                {
-                                    int a = WordApp.ActiveDocument.Tables[i].Rows.Count;
-                                    WordApp.ActiveDocument.Tables[i].Cell(resresh + 5, 2).Range.Text = D.tems[resresh].Name;
-                                    WordApp.ActiveDocument.Tables[i].Rows.Add();
-                                }
-                                resresh = DivideDist;
-                                DivideDist += DivideDist;
-                                
-                                
-                            }
+                                if (DA.Examen[CountSem[d] - 1] == true) // проверка из видов ФОРМ КОНТРОЛЯ используется в текуем семестре
+                                { ListControl.Add("Экзамен"); }
+                                else if (DA.Dif_Zachet[CountSem[d] - 1] == true)
+                                { ListControl.Add("Зачет с оценкой"); }
+                                else if (DA.Zachet[CountSem[d] - 1] == true)
+                                { ListControl.Add("Зачет"); }
+
                                 
 
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z - 2].Rez;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 6).Range.Text = D.tems[z].FormZ;
-                            //if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
-                        //}
+
+                                if (d == CountSem.Count - 1) // Если последний семестр, то добавляем остаток тем
+                                {
+                                    TemInSem.Add(DivideDist + RestDist);
+                                    TemSem = DivideDist + RestDist;
+                                }
+                                else
+                                {
+                                    TemInSem.Add(DivideDist);
+                                    TemSem = DivideDist;
+                                }
+
+                                int DivideLec = DA.Lekc[CountSem[d] - 1] / TemSem;
+                                int RestLec = DA.Lekc[CountSem[d] - 1] % TemSem;
+                                int DividePR = DA.Practice[CountSem[d] - 1] / TemSem;
+                                int RestPR = DA.Practice[CountSem[d] - 1] % TemSem;
+                                int DivideLB = DA.Lab[CountSem[d] - 1] / TemSem;
+                                int RestLB = DA.Lab[CountSem[d] - 1] % TemSem;
+                                int DivideAUD = (DA.Aud / CountSem.Count) / TemSem;
+                                int RestAUD = (DA.Aud / CountSem.Count) % TemSem;
+                                int DivideSR = DA._SR[CountSem[d] - 1] / TemSem;
+                                int RestSR = DA._SR[CountSem[d] - 1] % TemSem;
+                                int DivideEL = DA.Elect[CountSem[d] - 1] / TemSem;
+                                int RestEL = DA.Elect[CountSem[d] - 1] % TemSem; 
+
+
+                                for (int y = 0; y <= TemSem - 1; y++) // цикл заполнение тем по семестрам
+                                {
+                                    resresh = d * DivideDist + y;
+                                    a = WordApp.ActiveDocument.Tables[i].Rows.Count;
+                                    WordApp.ActiveDocument.Tables[i].Cell(a, 1).Range.Text = Convert.ToString(resresh + 1);
+                                    WordApp.ActiveDocument.Tables[i].Cell(a, 2).Range.Text = D.tems[resresh].Name.Trim();
+                                    if (y == TemSem - 1)
+                                    {   WordApp.ActiveDocument.Tables[i].Cell(a, 3).Range.Text = Convert.ToString(DivideLec + RestLec);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 4).Range.Text = Convert.ToString(DividePR + RestPR);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 5).Range.Text = Convert.ToString(DivideLB + RestLB);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD + RestAUD);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL + RestEL);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR + RestSR);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 12).Range.Text = "Оп,КР,Т";
+                                    }
+
+                                    else 
+                                    { 
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 3).Range.Text = Convert.ToString(DivideLec);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 4).Range.Text = Convert.ToString(DividePR);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 5).Range.Text = Convert.ToString(DivideLB);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 12).Range.Text = "Оп,КР,Т";
+                                    }
+
+                                    WordApp.ActiveDocument.Tables[i].Rows.Add();
+                                   
+                                }
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 1, 12).Range.Text = ListControl[d]; // Подводим итоги в каждом семестре
+                                WordApp.ActiveDocument.Tables[i].Rows.Add();
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 2).Range.Text = "Итого:";
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 3).Range.Text = Convert.ToString(DA.Lekc[CountSem[d] - 1]);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 4).Range.Text = Convert.ToString(DA.Practice[CountSem[d] - 1]);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 5).Range.Text = Convert.ToString(DA.Lab[CountSem[d] - 1]);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 6).Range.Text = Convert.ToString(DA.Aud / CountSem.Count);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 9).Range.Text = Convert.ToString(DA.Elect[CountSem[d] - 1]);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 11).Range.Text = Convert.ToString(DA._SR[CountSem[d] - 1]);
+                                WordApp.ActiveDocument.Tables[i].Rows.Add();
+                               
+                                
+                            }
+                            int EndRows = WordApp.ActiveDocument.Tables[i].Rows.Count; // Добавляем в конце таблице итоги по всей дисциплине
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 2).Range.Text = "Всего по дисциплине:";
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 3).Range.Text = Convert.ToString(Leck);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 4).Range.Text = Convert.ToString(PR);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 5).Range.Text = Convert.ToString(Lab);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 6).Range.Text = Convert.ToString(DA.Aud);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 8).Range.Text = Convert.ToString(DA.InterHours);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 9).Range.Text = Convert.ToString(DA.ElectHours);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 11).Range.Text = Convert.ToString(DA.SR * CountSem.Count); 
                     }
                     else
                     {
