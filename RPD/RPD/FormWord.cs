@@ -1129,6 +1129,70 @@ namespace RPD
         {
 
         }
+        private void Ticket_For_Exam()
+        {
+            int c = 0;
+            WordApp = new word.Application();
+            WordApp.Visible = false;
+            var Doc = WordApp.Documents.Add(Application.StartupPath + "/Билет_образец_спец.rtf");
+            object fileName = @"C:\Documents and Settings\stud\Рабочий стол\Билет_образец_спец(Новый).rtf";
+            Doc.SaveAs(ref fileName);
+
+            Microsoft.Office.Interop.Word.Range r1;
+            r1 = WordApp.ActiveDocument.Range();
+
+            int CountTickets = D.CountQuestForEx;
+            if (CountTickets % 2 != 0)
+            {
+                CountTickets = CountTickets + 1;
+                CountTickets = D.CountQuestForEx / 2;
+            }
+            else
+            {
+                CountTickets = D.CountQuestForEx / 2;
+            }
+
+
+
+            int m1 = D.ForExam.Count;
+            int[] NumberT = new int[CountTickets];
+
+            int m21 = r1.Paragraphs.Count;
+            object Start = r1.Paragraphs[1].Range.Start;
+            object End = r1.Paragraphs[m21].Range.End;
+            word.Range myRange = WordApp.ActiveDocument.Range(Start, End);
+            myRange.Copy();
+
+            if (r1.Find.Execute(r1.Find.Text = "БИЛЕТ № 1"))
+            {
+                FindReplace("БИЛЕТ № 1", "БИЛЕТ № n");
+            }
+            for (int i = 1; i <= CountTickets; i++)
+            {
+                //NumberT[i] = new int [2];
+                FindReplace("БИЛЕТ № n", "БИЛЕТ № " + i);
+                FindReplace("#Дисциплина", DA.Naim);
+                FindReplace("#Направление", DA.Napr);
+                if (c <= m1)
+                {
+                    FindReplace("#Вопрос1", D.ForExam[c]);
+                    FindReplace("#Вопрос2", D.ForExam[c + 1]);
+
+                }
+                c = c + 2;
+                myRange.Start = myRange.End;
+                myRange.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdPageBreak);
+                myRange.Paste();
+            }
+
+            MessageBox.Show("Билеты на рабочем столе");
+            Doc.SaveAs(ref fileName);
+
+
+
+
+
+        }
 
         public void fillingMainData() // загрузка информации из БД
         {
@@ -1253,6 +1317,11 @@ namespace RPD
         {
             Clear_Old_RP();
             btn_Clear.Enabled = false;
+        }
+
+        private void Create_Ticket_Click(object sender, EventArgs e)
+        {
+            Ticket_For_Exam();
         }
 
     }

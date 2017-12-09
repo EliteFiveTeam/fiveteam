@@ -42,6 +42,7 @@ namespace RPD
             //Tema tems;// As Tema ' Темы дисциплины
             public int Nc;// ' Колво компетенций
             public int Nt;// ' Колво тем в дисциплине
+            public int CountQuestForEx; // количество вопросов к экзамену
             public string Zn_before;// 'Знания до
             public string Zn_after;// 'Знания после
             public string Um_before;// 'Умения до
