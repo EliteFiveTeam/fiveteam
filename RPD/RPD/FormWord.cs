@@ -755,7 +755,7 @@ namespace RPD
             Word1.Selection.Find.Text = NameBookMark;
             Word1.Selection.Find.Execute();
             Word1.Selection.Font.Name = "Times New Roman";
-            if (Clipboard.GetText() != null) 
+            if (Clipboard.GetText() != "") 
             {
                 Word1.Selection.Paste();
             }
@@ -814,7 +814,7 @@ namespace RPD
                 WordApp.Documents.Add(FileNaim_ANAT);
             }
             string Name_NRP = DA.Index + "_" +DA.Naim + "_" + DA.Profile + ".docx";
-            WordApp.ActiveDocument.SaveAs2(Name_NRP);
+            //WordApp.ActiveDocument.SaveAs2(Name_NRP);
             WordApp.Visible = true;
             FindReplace("#Направление", DA.Napr);
             FindReplace("#Индекс", DA.Index);
@@ -915,7 +915,7 @@ namespace RPD
             TemPlan();
 
            
-            WordApp.ActiveDocument.Save();
+            //WordApp.ActiveDocument.Save();
             
             
 
@@ -948,13 +948,13 @@ namespace RPD
                         }
     
                     }
-                    if (CountSem.Count > 1)
+                    if (CountSem.Count > 1) // Отсюда идет заполнение таблицы
                     {
                         CountSem.Sort();
                         int DivideDist = D.Nt / CountSem.Count; // деление дисциплин на равное количество
                         int RestDist = D.Nt % CountSem.Count; // остаток дисциплин при нечетном вычислении 
-                        int a = 0;
-                            int resresh = 0;
+                        int a = 0; // для определение текущей строки в таблице
+                            int resresh = 0; // определение семестра в цикле заполнения 
                             int TemSem; // кол-во тем в семестре
                             for (int d = 0; d <= CountSem.Count - 1; d++)
                             {
@@ -998,7 +998,9 @@ namespace RPD
                                     resresh = d * DivideDist + y;
                                     a = WordApp.ActiveDocument.Tables[i].Rows.Count;
                                     WordApp.ActiveDocument.Tables[i].Cell(a, 1).Range.Text = Convert.ToString(resresh + 1);
-                                    WordApp.ActiveDocument.Tables[i].Cell(a, 2).Range.Text = D.tems[resresh].Name.Trim();
+                                    string Text = D.tems[resresh].Name.Replace("\r", "");
+                                    WordApp.ActiveDocument.Tables[i].Cell(a, 2).Range.Text = Text;
+                                   
                                     if (y == TemSem - 1)
                                     {   WordApp.ActiveDocument.Tables[i].Cell(a, 3).Range.Text = Convert.ToString(DivideLec + RestLec);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 4).Range.Text = Convert.ToString(DividePR + RestPR);
@@ -1006,6 +1008,7 @@ namespace RPD
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD + RestAUD);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL + RestEL);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 10).Range.Text = "П,Р,ТЗ,Лит";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR + RestSR);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 12).Range.Text = "Оп,КР,Т";
                                     }
@@ -1018,6 +1021,7 @@ namespace RPD
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL);
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 10).Range.Text = "П,Р,ТЗ,Лит";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 12).Range.Text = "Оп,КР,Т";
                                     }
@@ -1025,7 +1029,10 @@ namespace RPD
                                     WordApp.ActiveDocument.Tables[i].Rows.Add();
                                    
                                 }
-                                WordApp.ActiveDocument.Tables[i].Cell(a + 1, 12).Range.Text = ListControl[d]; // Подводим итоги в каждом семестре
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 1, 12).Range.Text = ListControl[d];// Подводим итоги в каждом семестре
+                                if (DA.HoursCont[CountSem[d] - 1] != 0)
+                                { WordApp.ActiveDocument.Tables[i].Cell(a + 1, 11).Range.Text = Convert.ToString(DA.HoursCont[CountSem[d] - 1]); }
+                                
                                 WordApp.ActiveDocument.Tables[i].Rows.Add();
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 2).Range.Text = "Итого:";
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 3).Range.Text = Convert.ToString(DA.Lekc[CountSem[d] - 1]);
@@ -1046,7 +1053,7 @@ namespace RPD
                             WordApp.ActiveDocument.Tables[i].Cell(EndRows, 6).Range.Text = Convert.ToString(DA.Aud);
                             WordApp.ActiveDocument.Tables[i].Cell(EndRows, 8).Range.Text = Convert.ToString(DA.InterHours);
                             WordApp.ActiveDocument.Tables[i].Cell(EndRows, 9).Range.Text = Convert.ToString(DA.ElectHours);
-                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 11).Range.Text = Convert.ToString(DA.SR * CountSem.Count); 
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 11).Range.Text = Convert.ToString(DA.SR); 
                     }
                     else
                     {

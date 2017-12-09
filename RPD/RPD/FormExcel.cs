@@ -395,7 +395,7 @@ namespace RPD
                                                 NumSem[z] = CheckSem[z];
                                                 string _CheckSem = NumSem[z].ToString();
                                                 int N = Int32.Parse(_CheckSem);
-                                                PLtime[ND]._Examen(N);
+                                                PLtime[ND]._Zachet(N);
 
 
                                             }
@@ -417,7 +417,7 @@ namespace RPD
                                                 NumSem[z] = CheckSem[z];
                                                 string _CheckSem = NumSem[z].ToString();
                                                 int N = Int32.Parse(_CheckSem);
-                                                PLtime[ND]._Examen(N);
+                                                PLtime[ND]._Dif_Zachet(N);
 
 
                                             }
@@ -439,7 +439,7 @@ namespace RPD
                                                 NumSem[z] = CheckSem[z];
                                                 string _CheckSem = NumSem[z].ToString();
                                                 int N = Int32.Parse(_CheckSem);
-                                                PLtime[ND]._Examen(N);
+                                                PLtime[ND].KR = Sem;
 
 
                                             }
@@ -476,12 +476,12 @@ namespace RPD
                                         PLtime[ND].Aud = Int32.Parse(excelworksheet.Cells[j, i].Text);
                                     }
                                     break;
-                                case "ср":
-                                    if (excelworksheet.Cells[j, i].Text != "")
-                                    {
-                                        PLtime[ND].SR = Int32.Parse(excelworksheet.Cells[j, i].Text);
-                                    }
-                                    break;
+                                //case "ср":
+                                //    if (excelworksheet.Cells[j, i].Text != "")
+                                //    {
+                                //        PLtime[ND].SR = Int32.Parse(excelworksheet.Cells[j, i].Text);
+                                //    }
+                                    //break;
                                 case "контроль":
                                     if (excelworksheet.Cells[j, i].Text != "")
                                     {
@@ -570,6 +570,13 @@ namespace RPD
                                         }
                                         break;
                                     case "элект":
+                                        if (excelworksheet.Cells[j, i].Text != "")
+                                        {
+                                            int Kek = Int32.Parse(excelworksheet.Cells[j, i].Text);
+                                            PLtime[ND]._Elect(PL.LS, Kek);
+                                        }
+                                        break;
+                                    case "элек":
                                         if (excelworksheet.Cells[j, i].Text != "")
                                         {
                                             int Kek = Int32.Parse(excelworksheet.Cells[j, i].Text);

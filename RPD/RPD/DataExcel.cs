@@ -125,6 +125,7 @@ namespace RPD
         public int[] _SR; // № семестр | СР
         public void _SR1(int Var, int Val)
         {
+             SR = SR + Val; // общее количество часов СР когда семестров больше одного
             _SR[Var - 1] = Val;
         }
         public int[] HoursCont; // № семестр | Контакт часы
