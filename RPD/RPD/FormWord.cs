@@ -57,7 +57,7 @@ namespace RPD
         
 
 
-
+        string Filename_;
         public static bool btn1;
         Tema tems;
         Discipline dis;
@@ -140,21 +140,17 @@ namespace RPD
             return st;
         }
 
+        public void CloseProcess()
+        {
+            Process[] List;
+            List = Process.GetProcessesByName("WORD");
+            foreach (Process proc in List)
+            {
+                proc.Kill();
+            }
+        }
         private void FormWord_Load(object sender, EventArgs e)
         {
-
-        }
-        public void Replace_Words_in_Pattern()
-        {
-            Microsoft.Office.Interop.Word.Range r;
-            r = WordApp.ActiveDocument.Range();
-            r.Find.ClearFormatting(); //Сброс форматирований из предыдущих операций поиска 
-            r.Find.Forward = true;
-            r.Find.Format = true;
-            r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
-            r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
-            ///*Здесь и далее замена ключевых слов в копии шаблона(РП) на нужные значения их excel и word*/
 
         }
 
@@ -342,11 +338,16 @@ namespace RPD
         }
         private void AnalysisOldProgramm()
         {
-            string Filename_;
+            
             WordApp = new word.Application(); // создаем объект word;
             WordApp.Visible = true; // показывает или скрывает файл word;
-            //openFileDialog1.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
-            Action action = () => { openFileDialog1.ShowDialog(); }; Invoke(action);
+            openFileDialog1.Filter = "Файлы Word (*.doc;*.docx)|*.doc;*.docx|All files (*.*)|*.*";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            { Filename_ = openFileDialog1.FileName; } 
+            if (Filename_ == null)
+            {
+                return;
+            }
             // фильтрует, оставляя только ворд файлы
             Filename_ = openFileDialog1.FileName;
             WordApp.Documents.Add(Filename_);// загружаем в word файл с рабочей книгой 
@@ -655,6 +656,7 @@ namespace RPD
                     r.Start = r.Start + exstr1.Length;
                     r.End = r.End - exstr3.Length;
                     int exm21 = r.ListParagraphs.Count;
+                    D.CountQuestForEx = exm21;
                     if (exm21 != 0)
                     {
                         object Start = r.ListParagraphs[1].Range.Start;
@@ -690,6 +692,7 @@ namespace RPD
                     r.Start = r.Start + exstr1.Length;
                     r.End = r.End - exstr2.Length;
                     int exm21 = r.ListParagraphs.Count;
+                    D.CountQuestForEx = exm21;
                     if (exm21 != 0)
                     {
                     object Start = r.ListParagraphs[1].Range.Start;
@@ -742,6 +745,7 @@ namespace RPD
             {
                 rtb_Log.AppendText("Итоговый контроль не найден\n", Color.Red);
             }
+            CloseProcess();
 
 
         }
@@ -1135,7 +1139,8 @@ namespace RPD
             WordApp = new word.Application();
             WordApp.Visible = false;
             var Doc = WordApp.Documents.Add(Application.StartupPath + "/Билет_образец_спец.rtf");
-            object fileName = @"C:\Documents and Settings\stud\Рабочий стол\Билет_образец_спец(Новый).rtf";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            object fileName = path + "/Билет_образец_спец(Новый).rtf";
             Doc.SaveAs(ref fileName);
 
             Microsoft.Office.Interop.Word.Range r1;
@@ -1187,7 +1192,7 @@ namespace RPD
 
             MessageBox.Show("Билеты на рабочем столе");
             Doc.SaveAs(ref fileName);
-
+            CloseProcess();
 
 
 
@@ -1322,6 +1327,7 @@ namespace RPD
         private void Create_Ticket_Click(object sender, EventArgs e)
         {
             Ticket_For_Exam();
+            WordApp.Quit();
         }
 
     }
