@@ -7,27 +7,3 @@ D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
-D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csprojResolveAssemblyReference.cache
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
-E:\My project\Our project\fiveteam\RPD\RPD\bin\Debug\RPD.exe
-E:\My project\Our project\fiveteam\RPD\RPD\bin\Debug\RPD.pdb
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csprojResolveAssemblyReference.cache
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormMain.resources
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormExcel.resources
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
-E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.exe
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.pdb
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\bin\Debug\RPD.exe
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\bin\Debug\RPD.pdb
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.FormMain.resources
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.FormExcel.resources
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.FormWord.resources
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.Properties.Resources.resources
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\GenerateResource.read.1.tlog
-C:\Documents and Settings\stud\Рабочий стол\fiveteam-master\RPD\RPD\obj\x86\Debug\GenerateResource.write.1.tlog
-C:\Users\m1keezy\Desktop\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.exe
-C:\Users\m1keezy\Desktop\fiveteam-master\RPD\RPD\obj\x86\Debug\RPD.pdb

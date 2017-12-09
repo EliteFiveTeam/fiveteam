@@ -47,6 +47,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.btn_Clear = new System.Windows.Forms.Button();
+            this.Create_Ticket = new System.Windows.Forms.Button();
             this.tab_Analysis_Pr.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -220,11 +221,22 @@
             this.btn_Clear.UseVisualStyleBackColor = true;
             this.btn_Clear.Click += new System.EventHandler(this.btn_Clear_Click);
             // 
+            // Create_Ticket
+            // 
+            this.Create_Ticket.Location = new System.Drawing.Point(196, 520);
+            this.Create_Ticket.Name = "Create_Ticket";
+            this.Create_Ticket.Size = new System.Drawing.Size(130, 37);
+            this.Create_Ticket.TabIndex = 27;
+            this.Create_Ticket.Text = "Создать билеты";
+            this.Create_Ticket.UseVisualStyleBackColor = true;
+            this.Create_Ticket.Click += new System.EventHandler(this.Create_Ticket_Click);
+            // 
             // FormWord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1425, 653);
+            this.Controls.Add(this.Create_Ticket);
             this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.tab_Analysis_Pr);
             this.Controls.Add(this.bt_create_newrp);
@@ -266,5 +278,6 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Button btn_Clear;
+        private System.Windows.Forms.Button Create_Ticket;
     }
 }
