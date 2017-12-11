@@ -142,6 +142,7 @@
             // 
             // bt_create_newrp
             // 
+            this.bt_create_newrp.Enabled = false;
             this.bt_create_newrp.Location = new System.Drawing.Point(196, 468);
             this.bt_create_newrp.Name = "bt_create_newrp";
             this.bt_create_newrp.Size = new System.Drawing.Size(130, 47);
@@ -223,6 +224,7 @@
             // 
             // Create_Ticket
             // 
+            this.Create_Ticket.Enabled = false;
             this.Create_Ticket.Location = new System.Drawing.Point(196, 520);
             this.Create_Ticket.Name = "Create_Ticket";
             this.Create_Ticket.Size = new System.Drawing.Size(130, 37);

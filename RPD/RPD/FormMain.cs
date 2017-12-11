@@ -11,6 +11,7 @@ using excel = Microsoft.Office.Interop.Excel; // подключение библ
 using word = Microsoft.Office.Interop.Word; // подключение библиотеки word и создание псевдонима "Alias"
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 
 namespace RPD
 {
@@ -48,7 +49,6 @@ namespace RPD
         private void bt_createRP_Click(object sender, EventArgs e)
         {
             
-            FW.ShowDialog();
         }
 
         private void bt_addprof_Click(object sender, EventArgs e)
@@ -303,6 +303,8 @@ namespace RPD
         {
            
             FW.fillingMainData(); // добавление в структуру DataAccess из БД 
+            FW.ShowDialog();
+
         }
 
         
@@ -310,8 +312,16 @@ namespace RPD
         {
             WordApp = new word.Application(); // создаем объект word;
             openFileWord.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
-            openFileWord.ShowDialog();
-            FW.FileNaim = openFileWord.FileName; // открытие шаблона Новой РП
+            if (openFileWord.ShowDialog() == DialogResult.OK)
+            { FW.FileNaim = openFileWord.FileName;
+            lb_path_rp.Text = Path.GetFileNameWithoutExtension(FW.FileNaim) + " загружен";
+
+            } // открытие шаблона Новой РП 
+            else
+            {
+                return;
+            }
+            
             WordApp.Documents.Add(FW.FileNaim);
             //if (AnalysisPattern(true))
             //{
@@ -325,8 +335,15 @@ namespace RPD
             WordApp = new word.Application(); // создаем объект word;
             WordApp.Visible = true;
             openFileWord.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
-            openFileWord.ShowDialog();
-            FW.FileNaim_FOS = openFileWord.FileName; // открытие шаблона Новой РП
+            if (openFileWord.ShowDialog() == DialogResult.OK)
+            { FW.FileNaim_FOS = openFileWord.FileName;
+            lb_path_fos.Text = Path.GetFileNameWithoutExtension(FW.FileNaim_FOS) + " загружен";
+            } // Шаблон ФОС
+            if (FW.FileNaim_FOS == null)
+            {
+                return;
+            }
+            
             WordApp.Documents.Add(FW.FileNaim_FOS);
         }
 
@@ -334,8 +351,14 @@ namespace RPD
         {
             WordApp = new word.Application(); // создаем объект word;
             openFileWord.Filter = "Файлы Word(*.doc)|*.doc|Word(*.docx)|*.docx";
-            openFileWord.ShowDialog();
-            FW.FileNaim_ANAT = openFileWord.FileName; // открытие шаблона Новой РП
+            if (openFileWord.ShowDialog() == DialogResult.OK)
+            { FW.FileNaim_ANAT = openFileWord.FileName;
+            lb_path_anat.Text = Path.GetFileNameWithoutExtension(FW.FileNaim_ANAT) + " загружен";
+            } // Шаблон АНАТ
+            if (FW.FileNaim_ANAT == null)
+            {
+                return;
+            }
             WordApp.Documents.Add(FW.FileNaim_ANAT);
         }
   

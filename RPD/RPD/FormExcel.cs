@@ -604,6 +604,7 @@ namespace RPD
                                             PLtime[ND]._HoursContElect(PL.LS, Kek);
                                         }
                                         break;
+                                   
 
                                 }
 
@@ -651,9 +652,10 @@ namespace RPD
                             Action Progress = () => { RTB_ExcelLog.AppendText("Кафедра не найдена!\n", Color.Red); }; Invoke(Progress);
                         }
 
-
+                        PLtime[ND]._InterHousInSem();
                         // счетчик дисциплин
                         ND++;
+                        PL.LS = 0;
 
                     }
                     Action action2 = () => { PB_Excel.Maximum = PL.DistCount; PB_Excel.Value = ND; }; Invoke(action2);
@@ -666,7 +668,7 @@ namespace RPD
                     Action Progress = () => { RTB_ExcelLog.AppendText("Дисциплины не найдены!\n", Color.Red); }; Invoke(Progress);
                 }
 
-
+              
                 StartEndDist(); // определения начало и конца дисцип
                 BeforeAndAfterDis(); // анализ дисц ПОСЛЕ и ДО
                 PL.DistCount = 0;

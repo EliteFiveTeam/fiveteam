@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
 using System.Data.OleDb;
 using excel = Microsoft.Office.Interop.Excel; // подключение библиотеки excel и создание псевдонима "Alias"
 using word = Microsoft.Office.Interop.Word; // подключение библиотеки word и создание псевдонима "Alias"
@@ -808,7 +809,7 @@ namespace RPD
             string NRP = FileNaim;
             string FOS = FileNaim_FOS;
             string ANAT = FileNaim_ANAT;
-            WordApp.Documents.Add(FileNaim);
+            var RPD = WordApp.Documents.Add(FileNaim);
             if (FileNaim_FOS != null)
             {
                 WordApp.Documents.Add(FileNaim_FOS);
@@ -817,13 +818,37 @@ namespace RPD
             {
                 WordApp.Documents.Add(FileNaim_ANAT);
             }
-            string Name_NRP = DA.Index + "_" +DA.Naim + "_" + DA.Profile + ".docx";
-            //WordApp.ActiveDocument.SaveAs2(Name_NRP);
+            string Name_NRP = DA.Index + "_" +DA.Naim + "_" + DA.Profile + ".docx"; // Название файла РПД
+            
+            /* Сохранение РПД в папку на рабочем столе "РПД" */
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string subpath = @"РПД";
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+            dirInfo.CreateSubdirectory(subpath);
+            path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\РПД/";
+            object fileName = path + Name_NRP;
+            RPD.SaveAs(fileName);
+            /*   //////////////////////////////////////////// */
+            
+            
             WordApp.Visible = true;
             FindReplace("#Направление", DA.Napr);
             FindReplace("#Индекс", DA.Index);
             FindReplace("#Дисциплина", DA.Naim);
             FindReplace("#Профиль", DA.Profile);
+            string PartDist = DA.Index.Substring(0, 2);
+            if (PartDist == "Б1")
+            {
+                FindReplace("#Части", "базовой части");
+            }
+            else
+            {
+                FindReplace("#Части", "вариативной части");
+            }
             FindReplace("#Цели", D.Cel);
             FindReplace("#Задачи", D.Tasks);
             foreach(string s in DA.PreDis)
@@ -874,15 +899,27 @@ namespace RPD
             {
                 if(DA.Examen[i] == true)
                 {
-                    Examen = "Экзамен; ";
+                    if (DA.KR - 1 == i)
+                    { Examen = "в " + Convert.ToString(i + 1) + "семестре - " + "Экзамен, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { Examen = "в " + Convert.ToString(i + 1) + "семестре - " + "Экзамен; " + Environment.NewLine; }
+                    
                 }
                 if (DA.Dif_Zachet[i] == true)
                 {
-                    DifZachet = "Зачет с оценкой; ";
+                    if (DA.KR - 1 == i)
+                    { DifZachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет с оценкой, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { DifZachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет с оценкой; " + Environment.NewLine; }
+                    
                 }
                 if (DA.Zachet[i] == true)
                 {
-                    Zachet = "Зачет; ";
+                    if (DA.KR - 1 == i)
+                    { Zachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { Zachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет; " + Environment.NewLine; }
+                    
                 }
             }
             FindReplace("#Аттестация", Examen + DifZachet + Zachet);
@@ -918,8 +955,8 @@ namespace RPD
             }
             TemPlan();
 
-           
-            //WordApp.ActiveDocument.Save();
+
+            RPD.Save();
             
             
 
@@ -994,7 +1031,9 @@ namespace RPD
                                 int DivideSR = DA._SR[CountSem[d] - 1] / TemSem;
                                 int RestSR = DA._SR[CountSem[d] - 1] % TemSem;
                                 int DivideEL = DA.Elect[CountSem[d] - 1] / TemSem;
-                                int RestEL = DA.Elect[CountSem[d] - 1] % TemSem; 
+                                int RestEL = DA.Elect[CountSem[d] - 1] % TemSem;
+                                int DivideInter = DA.InterHousInSem[CountSem[d] - 1] / TemSem;
+                                int RestInter = DA.InterHousInSem[CountSem[d] - 1] % TemSem; 
 
 
                                 for (int y = 0; y <= TemSem - 1; y++) // цикл заполнение тем по семестрам
@@ -1011,6 +1050,7 @@ namespace RPD
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 5).Range.Text = Convert.ToString(DivideLB + RestLB);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD + RestAUD);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 8).Range.Text = Convert.ToString(DivideInter + RestInter);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL + RestEL);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 10).Range.Text = "П,Р,ТЗ,Лит";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR + RestSR);
@@ -1024,6 +1064,7 @@ namespace RPD
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 5).Range.Text = Convert.ToString(DivideLB);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 6).Range.Text = Convert.ToString(DivideAUD);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                        WordApp.ActiveDocument.Tables[i].Cell(a, 8).Range.Text = Convert.ToString(DivideInter);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 9).Range.Text = Convert.ToString(DivideEL);
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 10).Range.Text = "П,Р,ТЗ,Лит";
                                         WordApp.ActiveDocument.Tables[i].Cell(a, 11).Range.Text = Convert.ToString(DivideSR);
@@ -1043,6 +1084,7 @@ namespace RPD
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 4).Range.Text = Convert.ToString(DA.Practice[CountSem[d] - 1]);
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 5).Range.Text = Convert.ToString(DA.Lab[CountSem[d] - 1]);
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 6).Range.Text = Convert.ToString(DA.Aud / CountSem.Count);
+                                WordApp.ActiveDocument.Tables[i].Cell(a + 2, 8).Range.Text = Convert.ToString(DA.InterHousInSem[CountSem[d] - 1]);
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 9).Range.Text = Convert.ToString(DA.Elect[CountSem[d] - 1]);
                                 WordApp.ActiveDocument.Tables[i].Cell(a + 2, 11).Range.Text = Convert.ToString(DA._SR[CountSem[d] - 1]);
                                 WordApp.ActiveDocument.Tables[i].Rows.Add();
@@ -1061,18 +1103,81 @@ namespace RPD
                     }
                     else
                     {
-                        for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
+                        for (int d = 0; d <= CountSem.Count - 1; d++)
                         {
+                            if (DA.Examen[CountSem[d] - 1] == true) // проверка из видов ФОРМ КОНТРОЛЯ используется в текуем семестре
+                            { ListControl.Add("Экзамен"); }
+                            else if (DA.Dif_Zachet[CountSem[d] - 1] == true)
+                            { ListControl.Add("Зачет с оценкой"); }
+                            else if (DA.Zachet[CountSem[d] - 1] == true)
+                            { ListControl.Add("Зачет"); }
 
-                            WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z - 2].Name;
+                            int DivideLec = DA.Lekc[CountSem[d] - 1] / D.Nt;
+                            int RestLec = DA.Lekc[CountSem[d] - 1] % D.Nt;
+                            int DividePR = DA.Practice[CountSem[d] - 1] / D.Nt;
+                            int RestPR = DA.Practice[CountSem[d] - 1] % D.Nt;
+                            int DivideLB = DA.Lab[CountSem[d] - 1] / D.Nt;
+                            int RestLB = DA.Lab[CountSem[d] - 1] % D.Nt;
+                            int DivideAUD = (DA.Aud / CountSem.Count) / D.Nt;
+                            int RestAUD = (DA.Aud / CountSem.Count) % D.Nt;
+                            int DivideSR = DA._SR[CountSem[d] - 1] / D.Nt;
+                            int RestSR = DA._SR[CountSem[d] - 1] % D.Nt;
+                            int DivideEL = DA.Elect[CountSem[d] - 1] / D.Nt;
+                            int RestEL = DA.Elect[CountSem[d] - 1] % D.Nt;
+                            int DivideInter = DA.InterHousInSem[CountSem[d] - 1] / D.Nt;
+                            int RestInter = DA.InterHousInSem[CountSem[d] - 1] % D.Nt;
+                            int Index = 0;
+                            for (int z = 0; z <= D.Nt - 1; z++) // z - номер строки в таблице с темами
+                            {
+                                Index = WordApp.ActiveDocument.Tables[i].Rows.Count;
+                                string Text = D.tems[z].Name.Replace("\r", "");
+                                WordApp.ActiveDocument.Tables[i].Cell(Index, 2).Range.Text = Text;
+                                if (z == D.Nt - 1)
+                                {
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 3).Range.Text = Convert.ToString(DivideLec + RestLec);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 4).Range.Text = Convert.ToString(DividePR + RestPR);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 5).Range.Text = Convert.ToString(DivideLB + RestLB);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 6).Range.Text = Convert.ToString(DivideAUD + RestAUD);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 8).Range.Text = Convert.ToString(DivideInter + RestInter);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 9).Range.Text = Convert.ToString(DivideEL + RestEL);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 10).Range.Text = "П,Р,ТЗ,Лит";
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 11).Range.Text = Convert.ToString(DivideSR + RestSR);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 12).Range.Text = "Оп,КР,Т";
+                                }
 
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z - 2].Rez;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
-                            //WordApp.ActiveDocument.Tables[i].Cell(z, 6).Range.Text = D.tems[z].FormZ;
-                            if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                                else
+                                {
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 3).Range.Text = Convert.ToString(DivideLec);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 4).Range.Text = Convert.ToString(DividePR);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 5).Range.Text = Convert.ToString(DivideLB);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 6).Range.Text = Convert.ToString(DivideAUD);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 7).Range.Text = "Д,МК,ОР,ОТЗ";
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 8).Range.Text = Convert.ToString(DivideInter);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 9).Range.Text = Convert.ToString(DivideEL);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 10).Range.Text = "П,Р,ТЗ,Лит";
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 11).Range.Text = Convert.ToString(DivideSR);
+                                    WordApp.ActiveDocument.Tables[i].Cell(Index, 12).Range.Text = "Оп,КР,Т";
+                                }
+                                WordApp.ActiveDocument.Tables[i].Rows.Add();
+
+                            }
+                            int EndRows = WordApp.ActiveDocument.Tables[i].Rows.Count;
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 12).Range.Text = ListControl[d];
+                            if (DA.HoursCont[CountSem[d] - 1] != 0)
+                            { WordApp.ActiveDocument.Tables[i].Cell(Index + 1, 11).Range.Text = Convert.ToString(DA.HoursCont[CountSem[d] - 1]); }
+                            WordApp.ActiveDocument.Tables[i].Rows.Add();
+                            EndRows = WordApp.ActiveDocument.Tables[i].Rows.Count; // Добавляем в конце таблице итоги по всей дисциплине
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 2).Range.Text = "Всего по дисциплине:";
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 3).Range.Text = Convert.ToString(Leck);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 4).Range.Text = Convert.ToString(PR);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 5).Range.Text = Convert.ToString(Lab);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 6).Range.Text = Convert.ToString(DA.Aud);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 8).Range.Text = Convert.ToString(DA.InterHours);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 9).Range.Text = Convert.ToString(DA.ElectHours);
+                            WordApp.ActiveDocument.Tables[i].Cell(EndRows, 11).Range.Text = Convert.ToString(DA.SR); 
                         }
-                        
+
                     }
 
                     
@@ -1118,13 +1223,31 @@ namespace RPD
             {
                 btn_Clear.Enabled = false;
             }
-            
+            if (btn_OpenWp.Enabled == false)
+            {
+                bt_create_newrp.Enabled = true;
+            }
+            else
+            {
+                bt_create_newrp.Enabled = false;
+            }
+            if (btn_OpenWp.Enabled == false)
+            {
+                Create_Ticket.Enabled = true;
+            }
+            else
+            {
+                Create_Ticket.Enabled = false;
+            }
+
         }
 
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
-          
+
+            bt_create_newrp.Enabled = false;
+            
             //if (AnalysisPattern(true))
             //{
             //    /*Если шаблон вернёт значение true, то он корректен и мы можем приступить к замене слов(для замены создан специальный метод выше)*/
@@ -1321,7 +1444,7 @@ namespace RPD
                 DA.AddAfterDis(BD.reader["Дисциплина_после"].ToString());
             }
             BD.reader.Close();
-            
+            DA._InterHousInSem();
 
         }
 
@@ -1329,12 +1452,19 @@ namespace RPD
         {
             Clear_Old_RP();
             btn_Clear.Enabled = false;
+            if (btn_Clear.Enabled == false)
+            {
+                Create_Ticket.Enabled = false;
+                bt_create_newrp.Enabled = false;
+            }
         }
 
         private void Create_Ticket_Click(object sender, EventArgs e)
         {
             Ticket_For_Exam();
             WordApp.Quit();
+            Create_Ticket.Enabled = false;
+            
         }
 
     }

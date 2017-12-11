@@ -138,7 +138,15 @@ namespace RPD
         {
             HoursContElect[Var - 1] = Val;
         }
-
+        public int[] InterHousInSem; // № семестр | Количество интер часов 
+        public void _InterHousInSem()
+        {
+            for (int zx = 0; zx <= LabInter.Length - 1; zx++)
+            {
+                int Jeff = PractInter[zx] + LekcInter[zx] + LabInter[zx];
+                InterHousInSem[zx] = Jeff;
+            }
+        }
         /* ФОРМА КОНТРОЛЯ */
         public bool[] Examen; // Форм. контр | Экзамен
         public bool[] Zachet; // Форм. контр | Зачет
@@ -163,6 +171,7 @@ namespace RPD
 
         public void initStruct()
         {
+            InterHousInSem = new int[10];
             Examen = new bool[10];
             Zachet = new bool[10];
             Dif_Zachet = new bool[10];

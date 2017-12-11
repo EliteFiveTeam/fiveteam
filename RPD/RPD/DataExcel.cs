@@ -125,7 +125,7 @@ namespace RPD
         public int[] _SR; // № семестр | СР
         public void _SR1(int Var, int Val)
         {
-             SR = SR + Val; // общее количество часов СР когда семестров больше одного
+            SR = SR + Val; // общее количество часов СР когда семестров больше одного
             _SR[Var - 1] = Val;
         }
         public int[] HoursCont; // № семестр | Контакт часы
@@ -138,7 +138,15 @@ namespace RPD
         {
             HoursContElect[Var - 1] = Val;
         }
-
+        public int[] InterHousInSem; // № семестр | Количество интер часов 
+        public void _InterHousInSem()
+        {
+            for (int zx = 0; zx <= LabInter.Length - 1; zx++)
+            {
+                int Jeff = PractInter[zx] + LekcInter[zx] + LabInter[zx];
+                InterHousInSem[zx] = Jeff;
+            }
+        }
         /* ФОРМА КОНТРОЛЯ */
         public bool[] Examen; // Форм. контр | Экзамен
         public bool[] Zachet; // Форм. контр | Зачет
@@ -164,6 +172,7 @@ namespace RPD
         public void initStruct()
         {
             Examen = new bool[10];
+            InterHousInSem = new int[10];
             Zachet = new bool[10];
             Dif_Zachet = new bool[10];
             ZET = new int[10];

@@ -33,7 +33,6 @@
             this.lst_prof = new System.Windows.Forms.ListBox();
             this.clst_disc = new System.Windows.Forms.CheckedListBox();
             this.bt_addprof = new System.Windows.Forms.Button();
-            this.bt_createRP = new System.Windows.Forms.Button();
             this.bt_select = new System.Windows.Forms.Button();
             this.bt_del_bd = new System.Windows.Forms.Button();
             this.lb_path_fos = new System.Windows.Forms.Label();
@@ -94,19 +93,9 @@
             this.bt_addprof.UseVisualStyleBackColor = true;
             this.bt_addprof.Click += new System.EventHandler(this.bt_addprof_Click);
             // 
-            // bt_createRP
-            // 
-            this.bt_createRP.Location = new System.Drawing.Point(593, 389);
-            this.bt_createRP.Name = "bt_createRP";
-            this.bt_createRP.Size = new System.Drawing.Size(105, 32);
-            this.bt_createRP.TabIndex = 5;
-            this.bt_createRP.Text = "Создать РП";
-            this.bt_createRP.UseVisualStyleBackColor = true;
-            this.bt_createRP.Click += new System.EventHandler(this.bt_createRP_Click);
-            // 
             // bt_select
             // 
-            this.bt_select.Location = new System.Drawing.Point(428, 386);
+            this.bt_select.Location = new System.Drawing.Point(542, 392);
             this.bt_select.Name = "bt_select";
             this.bt_select.Size = new System.Drawing.Size(94, 35);
             this.bt_select.TabIndex = 6;
@@ -228,7 +217,6 @@
             this.Controls.Add(this.lb_rp);
             this.Controls.Add(this.bt_del_bd);
             this.Controls.Add(this.bt_select);
-            this.Controls.Add(this.bt_createRP);
             this.Controls.Add(this.bt_addprof);
             this.Controls.Add(this.clst_disc);
             this.Controls.Add(this.lst_prof);
@@ -247,7 +235,6 @@
         private System.Windows.Forms.Label lb_prof;
         private System.Windows.Forms.Label lb_disc;
         private System.Windows.Forms.Button bt_addprof;
-        private System.Windows.Forms.Button bt_createRP;
         private System.Windows.Forms.Button bt_select;
         private System.Windows.Forms.Button bt_del_bd;
         private System.Windows.Forms.Label lb_path_fos;
