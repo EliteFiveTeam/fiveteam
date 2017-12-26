@@ -118,27 +118,24 @@
             this.lb_path_fos.AutoSize = true;
             this.lb_path_fos.Location = new System.Drawing.Point(285, 485);
             this.lb_path_fos.Name = "lb_path_fos";
-            this.lb_path_fos.Size = new System.Drawing.Size(102, 13);
+            this.lb_path_fos.Size = new System.Drawing.Size(0, 13);
             this.lb_path_fos.TabIndex = 24;
-            this.lb_path_fos.Text = "такой-то зазружен";
             // 
             // lb_path_anat
             // 
             this.lb_path_anat.AutoSize = true;
             this.lb_path_anat.Location = new System.Drawing.Point(285, 511);
             this.lb_path_anat.Name = "lb_path_anat";
-            this.lb_path_anat.Size = new System.Drawing.Size(102, 13);
+            this.lb_path_anat.Size = new System.Drawing.Size(0, 13);
             this.lb_path_anat.TabIndex = 23;
-            this.lb_path_anat.Text = "такой-то зазружен";
             // 
             // lb_path_rp
             // 
             this.lb_path_rp.AutoSize = true;
             this.lb_path_rp.Location = new System.Drawing.Point(285, 450);
             this.lb_path_rp.Name = "lb_path_rp";
-            this.lb_path_rp.Size = new System.Drawing.Size(102, 13);
+            this.lb_path_rp.Size = new System.Drawing.Size(0, 13);
             this.lb_path_rp.TabIndex = 22;
-            this.lb_path_rp.Text = "такой-то зазружен";
             // 
             // bt_select_anat
             // 
