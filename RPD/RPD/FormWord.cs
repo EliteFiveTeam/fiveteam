@@ -1128,8 +1128,8 @@ namespace RPD
                             WordApp.ActiveDocument.Tables[a].Cell(a1 + 2, 2).Range.Text = "Итого:";
                             WordApp.ActiveDocument.Tables[b].Cell(a2 + 1, 2).Range.Text = "Итого:";
                             WordApp.ActiveDocument.Tables[c].Cell(a3 + 1, 2).Range.Text = "Итого:";
-                            WordApp.ActiveDocument.Tables[b].Cell(a2 + 2, 2).Range.Text = "20";
-                            WordApp.ActiveDocument.Tables[c].Cell(a3 + 2, 2).Range.Text = "20";
+                            WordApp.ActiveDocument.Tables[b].Cell(a2 + 2, 4).Range.Text = "20";
+                            WordApp.ActiveDocument.Tables[c].Cell(a3 + 2, 4).Range.Text = "20";
                             WordApp.ActiveDocument.Tables[b].Cell(a2 + 1, 4).Range.Text = "20";
                             WordApp.ActiveDocument.Tables[c].Cell(BegCell, 4).Range.Text = "20";
                             WordApp.ActiveDocument.Tables[c].Cell(BegCell, 4).Merge(WordApp.ActiveDocument.Tables[c].Cell(a3, 4));
@@ -1181,11 +1181,18 @@ namespace RPD
                             int DivideInter = DA.InterHousInSem[CountSem[d] - 1] / D.Nt;
                             int RestInter = DA.InterHousInSem[CountSem[d] - 1] % D.Nt;
                             int Index = 0;
+                            int a2 = 0;
+                            int a3 = 0;
                             for (int z = 0; z <= D.Nt - 1; z++) // z - номер строки в таблице с темами
                             {
                                 Index = WordApp.ActiveDocument.Tables[a].Rows.Count;
+                                a2= WordApp.ActiveDocument.Tables[b].Rows.Count;
+                                a3 = WordApp.ActiveDocument.Tables[c].Rows.Count;
                                 string Text = D.tems[z].Name.Replace("\r", "");
                                 WordApp.ActiveDocument.Tables[a].Cell(Index, 2).Range.Text = Text;
+                                WordApp.ActiveDocument.Tables[b].Cell(a2, 2).Range.Text = Text;
+                                WordApp.ActiveDocument.Tables[c].Cell(a3, 2).Range.Text = Text;
+                                WordApp.ActiveDocument.Tables[b].Cell(a2, 4).Range.Text = Convert.ToDouble(20.0 / D.Nt).ToString("0.00");
                                 if (z == D.Nt - 1)
                                 {
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 3).Range.Text = Convert.ToString(DivideLec + RestLec);
@@ -1198,6 +1205,9 @@ namespace RPD
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 10).Range.Text = "П,Р,ТЗ,Лит";
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 11).Range.Text = Convert.ToString(DivideSR + RestSR);
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 12).Range.Text = "Оп,КР,Т";
+                                    WordApp.ActiveDocument.Tables[b].Cell(a2, 3).Range.Text = "Оп,КР,Т";
+                                    WordApp.ActiveDocument.Tables[c].Cell(a3, 3).Range.Text = "Р,ТЗ,Д";
+
                                 }
 
                                 else
@@ -1212,17 +1222,31 @@ namespace RPD
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 10).Range.Text = "П,Р,ТЗ,Лит";
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 11).Range.Text = Convert.ToString(DivideSR);
                                     WordApp.ActiveDocument.Tables[a].Cell(Index, 12).Range.Text = "Оп,КР,Т";
+                                    WordApp.ActiveDocument.Tables[b].Cell(a2, 3).Range.Text = "Оп,КР,Т";
+                                    WordApp.ActiveDocument.Tables[c].Cell(a3, 3).Range.Text = "Р,ТЗ,Д";
                                 }
                                 WordApp.ActiveDocument.Tables[a].Rows.Add();
+                                WordApp.ActiveDocument.Tables[b].Rows.Add();
+                                WordApp.ActiveDocument.Tables[c].Rows.Add();
 
                             }
                             int EndRows = WordApp.ActiveDocument.Tables[a].Rows.Count;
+                            int EndRowsB = WordApp.ActiveDocument.Tables[b].Rows.Count;
+                            int EndRowsC = WordApp.ActiveDocument.Tables[c].Rows.Count;
                             WordApp.ActiveDocument.Tables[a].Cell(EndRows, 12).Range.Text = ListControl[d];
                             if (DA.HoursCont[CountSem[d] - 1] != 0)
                             { WordApp.ActiveDocument.Tables[a].Cell(Index + 1, 11).Range.Text = Convert.ToString(DA.HoursCont[CountSem[d] - 1]); }
                             WordApp.ActiveDocument.Tables[a].Rows.Add();
                             EndRows = WordApp.ActiveDocument.Tables[a].Rows.Count; // Добавляем в конце таблице итоги по всей дисциплине
+                            EndRowsB = WordApp.ActiveDocument.Tables[b].Rows.Count;
+                            EndRowsC = WordApp.ActiveDocument.Tables[c].Rows.Count;
                             WordApp.ActiveDocument.Tables[a].Cell(EndRows, 2).Range.Text = "Всего по дисциплине:";
+                            WordApp.ActiveDocument.Tables[b].Cell(EndRowsB, 2).Range.Text = "Всего по дисциплине:";
+                            WordApp.ActiveDocument.Tables[b].Cell(EndRowsB, 4).Range.Text = "20";
+                            WordApp.ActiveDocument.Tables[c].Cell(EndRowsC, 2).Range.Text = "Всего по дисциплине:";
+                            WordApp.ActiveDocument.Tables[c].Cell(EndRowsC, 4).Range.Text = "20";
+                            WordApp.ActiveDocument.Tables[c].Cell(BegCell, 4).Range.Text = "20";
+                            WordApp.ActiveDocument.Tables[c].Cell(BegCell, 4).Merge(WordApp.ActiveDocument.Tables[c].Cell(a3, 4));
                             WordApp.ActiveDocument.Tables[a].Cell(EndRows, 3).Range.Text = Convert.ToString(Leck);
                             WordApp.ActiveDocument.Tables[a].Cell(EndRows, 4).Range.Text = Convert.ToString(PR);
                             WordApp.ActiveDocument.Tables[a].Cell(EndRows, 5).Range.Text = Convert.ToString(Lab);
