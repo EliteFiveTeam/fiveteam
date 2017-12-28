@@ -49,6 +49,7 @@
             this.btn_Clear = new System.Windows.Forms.Button();
             this.Create_Ticket = new System.Windows.Forms.Button();
             this.bt_create_newfos = new System.Windows.Forms.Button();
+            this.Create_ANOT = new System.Windows.Forms.Button();
             this.tab_Analysis_Pr.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -244,11 +245,22 @@
             this.bt_create_newfos.UseVisualStyleBackColor = true;
             this.bt_create_newfos.Click += new System.EventHandler(this.bt_create_newfos_Click);
             // 
+            // Create_ANOT
+            // 
+            this.Create_ANOT.Location = new System.Drawing.Point(332, 520);
+            this.Create_ANOT.Name = "Create_ANOT";
+            this.Create_ANOT.Size = new System.Drawing.Size(132, 37);
+            this.Create_ANOT.TabIndex = 29;
+            this.Create_ANOT.Text = "Создать новую Аннотацию";
+            this.Create_ANOT.UseVisualStyleBackColor = true;
+            this.Create_ANOT.Click += new System.EventHandler(this.Create_ANOT_Click);
+            // 
             // FormWord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1425, 653);
+            this.Controls.Add(this.Create_ANOT);
             this.Controls.Add(this.bt_create_newfos);
             this.Controls.Add(this.Create_Ticket);
             this.Controls.Add(this.btn_Clear);
@@ -294,5 +306,6 @@
         private System.Windows.Forms.Button btn_Clear;
         private System.Windows.Forms.Button Create_Ticket;
         private System.Windows.Forms.Button bt_create_newfos;
+        private System.Windows.Forms.Button Create_ANOT;
     }
 }

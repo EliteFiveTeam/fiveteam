@@ -807,17 +807,9 @@ namespace RPD
             WordApp = new word.Application(); // создаем объект word;
             FormMain FM = new FormMain();
             string NRP = FileNaim;
-            string FOS = FileNaim_FOS;
-            string ANAT = FileNaim_ANAT;
+           
             var RPD = WordApp.Documents.Add(FileNaim);
-            if (FileNaim_FOS != null)
-            {
-                WordApp.Documents.Add(FileNaim_FOS);
-            }
-            if (FileNaim_ANAT != null)
-            {
-                WordApp.Documents.Add(FileNaim_ANAT);
-            }
+            
             string Name_NRP = DA.Index + "_" +DA.Naim + "_" + DA.Profile + ".docx"; // Название файла РПД
             
             /* Сохранение РПД в папку на рабочем столе "РПД" */
@@ -1050,6 +1042,119 @@ namespace RPD
 
             RPD.Save();
         }
+
+        private void CreateNewAnat()
+        {
+            WordApp = new word.Application(); // создаем объект word;
+            FormMain FM = new FormMain();
+            string ANAT = FileNaim_ANAT;
+            var RPD_ANAT = WordApp.Documents.Add(ANAT);
+            if (FileNaim_ANAT != null)
+            {
+                RPD_ANAT = WordApp.Documents.Add(ANAT);
+            }
+            string Name_Anat = "Аннотация_" + DA.Index + "_" + DA.Naim + "_" + DA.Profile + ".docx"; // Название файла РПД
+
+            /* Сохранение РПД в папку на рабочем столе "РПД" */
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string subpath = @"РПД";
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+            dirInfo.CreateSubdirectory(subpath);
+            path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\РПД/";
+            object fileName = path + Name_Anat;
+            RPD_ANAT.SaveAs(fileName);
+            /*   //////////////////////////////////////////// */
+
+            WordApp.Visible = true;
+            FindReplace("#Направление", DA.Napr);
+            FindReplace("#Индекс", DA.Index);
+            FindReplace("#Дисциплина", DA.Naim);
+            FindReplace("#Профиль", DA.Profile);
+
+            string PartDist = DA.Index.Substring(0, 2);
+            if (PartDist == "Б1")
+            {
+                FindReplace("#Части", "базовой части");
+            }
+            else
+            {
+                FindReplace("#Части", "вариативной части");
+            }
+            FindReplace("#Цели", D.Cel);
+            FindReplace("#Задачи", D.Tasks);
+            foreach (string s in DA.PreDis)
+            {
+                FindReplace("#ДисциплиныДО", s);
+            }
+
+            FindReplace("#ЗнатьДО", D.Zn_before);
+            FindReplace("#УметьДО", D.Um_before);
+            FindReplace("#ВладетьДО", D.Vl_before);
+            foreach (string s in DA.AfterDis)
+            {
+                FindReplace("#ДисциплиныПосле", s);
+            }
+            string Examen = "";
+            string DifZachet = "";
+            string Zachet = "";
+            for (int i = 0; i <= DA.Examen.Length - 1; i++)
+            {
+                if (DA.Examen[i] == true)
+                {
+                    if (DA.KR - 1 == i)
+                    { Examen = "в " + Convert.ToString(i + 1) + "семестре - " + "Экзамен, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { Examen = "в " + Convert.ToString(i + 1) + "семестре - " + "Экзамен; " + Environment.NewLine; }
+
+                }
+                if (DA.Dif_Zachet[i] == true)
+                {
+                    if (DA.KR - 1 == i)
+                    { DifZachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет с оценкой, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { DifZachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет с оценкой; " + Environment.NewLine; }
+
+                }
+                if (DA.Zachet[i] == true)
+                {
+                    if (DA.KR - 1 == i)
+                    { Zachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет, Курсовая работа; " + Environment.NewLine; }
+                    else
+                    { Zachet = "в " + Convert.ToString(i + 1) + "семестре - " + "Зачет; " + Environment.NewLine; }
+
+                }
+            }
+            FindReplace("#Аттестация", Examen + DifZachet + Zachet);
+            string Compet = "";
+            for (int i = 0; i <= DA.Compet.Count - 1; i++)
+            {
+                Compet += DA.Compet[i] + ";";
+            }
+            Compet = Compet.Substring(0, Compet.Length - 1);
+            string FindTable = "Наименование темы дисциплины";
+
+            for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
+            {
+                if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTable))
+                {
+                    for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
+                    {
+
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z - 2].Name;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
+                        if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                    }
+                }
+
+            }
+            RPD_ANAT.Save();
+        }
+
 
         private void TemPlan() // Заполнение ТЕМАТИЧЕСКИЙ ПЛАН ИЗУЧЕНИЯ ДИСЦИПЛИНЫ
         {
@@ -1407,6 +1512,7 @@ namespace RPD
         private void bt_create_newrp_Click(object sender, EventArgs e)
         {
             CreateNewProgram();
+            
 
             bt_create_newrp.Enabled = false;
             
@@ -1632,6 +1738,11 @@ namespace RPD
         private void bt_create_newfos_Click(object sender, EventArgs e)
         {
             CreateNewFos();
+        }
+
+        private void Create_ANOT_Click(object sender, EventArgs e)
+        {
+            CreateNewAnat();
         }
 
     }
