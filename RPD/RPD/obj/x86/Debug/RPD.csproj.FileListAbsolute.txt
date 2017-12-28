@@ -8,3 +8,5 @@ D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csproj.GenerateResource.Cache
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb
 D:\PR\fiveteam\RPD\RPD\obj\x86\Debug\RPD.csprojResolveAssemblyReference.cache
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.exe
+E:\My project\Our project\fiveteam\RPD\RPD\obj\x86\Debug\RPD.pdb

@@ -969,6 +969,88 @@ namespace RPD
             
         }
 
+        private void CreateNewFos() // работа с Новым Фос
+        {
+            WordApp = new word.Application(); // создаем объект word;
+            FormMain FM = new FormMain();
+
+            string FOS = FileNaim_FOS;
+
+            var RPD = WordApp.Documents.Add(FileNaim_FOS);
+
+            string Name_NRPF = DA.Index + "_" + DA.Naim + "_" + DA.Profile + ".docx"; // Название файла РПД
+
+            /* Сохранение РПД в папку на рабочем столе "РПД" */
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string subpath = @"ФОС";
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+            dirInfo.CreateSubdirectory(subpath);
+            path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\ФОС/";
+            object fileName = path + Name_NRPF;
+            RPD.SaveAs(fileName);
+            /*   //////////////////////////////////////////// */
+
+
+            WordApp.Visible = true;
+            FindReplace("#Направление", DA.Napr);
+            FindReplace("#Индекс", DA.Index);
+            FindReplace("#Дисциплина", DA.Naim);
+            string PartDist = DA.Index.Substring(0, 2);
+            if (PartDist == "Б1")
+            {
+                FindReplace("#Части", "базовой части");
+            }
+            else
+            {
+                FindReplace("#Части", "вариативной части");
+            }
+            foreach (string s in DA.PreDis)
+            {
+                FindReplace("#ДисциплиныДО", s);
+            }
+
+            FindReplace("#ЗнатьДО", D.Zn_before);
+            FindReplace("#УметьДО", D.Um_before);
+            FindReplace("#ВладетьДО", D.Vl_before);
+            foreach (string s in DA.AfterDis)
+            {
+                FindReplace("#ДисциплиныПосле", s);
+            }
+            string Compet = "";
+            for (int i = 0; i <= DA.Compet.Count - 1; i++)
+            {
+                Compet += DA.Compet[i] + ";";
+            }
+            Compet = Compet.Substring(0, Compet.Length - 1);
+            string FindTable = "Наименование темы дисциплины";
+
+            for (int i = 1; i <= WordApp.ActiveDocument.Tables.Count; i++)
+            {
+                if (WordApp.ActiveDocument.Tables[i].Cell(1, 2).Range.Find.Execute(FindTable))
+                {
+                    for (int z = 2; z <= D.Nt + 1; z++) // z - номер строки в таблице с темами
+                    {
+
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 2).Range.Text = D.tems[z - 2].Name;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 3).Range.Text = D.tems[z - 2].Text;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 5).Range.Text = D.tems[z - 2].Rez;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 4).Range.Text = Compet;
+                        WordApp.ActiveDocument.Tables[i].Cell(z, 6).Range.Text = D.tems[z].FormZ;
+                        if (z != D.Nt + 1) WordApp.ActiveDocument.Tables[i].Rows.Add();
+                    }
+                }
+
+            }
+            ReplBookmark("Перечень_УМО", ref rtb_Tems, ref WordApp);
+
+
+            RPD.Save();
+        }
+
         private void TemPlan() // Заполнение ТЕМАТИЧЕСКИЙ ПЛАН ИЗУЧЕНИЯ ДИСЦИПЛИНЫ
         {
             List <int> CountSem = new List<int>(); // создать коллекций семестров
@@ -1545,6 +1627,11 @@ namespace RPD
             WordApp.Quit();
             Create_Ticket.Enabled = false;
               
+        }
+
+        private void bt_create_newfos_Click(object sender, EventArgs e)
+        {
+            CreateNewFos();
         }
 
     }

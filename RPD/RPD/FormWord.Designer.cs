@@ -48,6 +48,7 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.btn_Clear = new System.Windows.Forms.Button();
             this.Create_Ticket = new System.Windows.Forms.Button();
+            this.bt_create_newfos = new System.Windows.Forms.Button();
             this.tab_Analysis_Pr.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -233,11 +234,22 @@
             this.Create_Ticket.UseVisualStyleBackColor = true;
             this.Create_Ticket.Click += new System.EventHandler(this.Create_Ticket_Click);
             // 
+            // bt_create_newfos
+            // 
+            this.bt_create_newfos.Location = new System.Drawing.Point(333, 469);
+            this.bt_create_newfos.Name = "bt_create_newfos";
+            this.bt_create_newfos.Size = new System.Drawing.Size(131, 46);
+            this.bt_create_newfos.TabIndex = 28;
+            this.bt_create_newfos.Text = "Создать новую ФОС";
+            this.bt_create_newfos.UseVisualStyleBackColor = true;
+            this.bt_create_newfos.Click += new System.EventHandler(this.bt_create_newfos_Click);
+            // 
             // FormWord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1425, 653);
+            this.Controls.Add(this.bt_create_newfos);
             this.Controls.Add(this.Create_Ticket);
             this.Controls.Add(this.btn_Clear);
             this.Controls.Add(this.tab_Analysis_Pr);
@@ -281,5 +293,6 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Button btn_Clear;
         private System.Windows.Forms.Button Create_Ticket;
+        private System.Windows.Forms.Button bt_create_newfos;
     }
 }
