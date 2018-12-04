@@ -341,7 +341,7 @@ namespace RPD
                     {
                         PLtime[ND].initStruct(); // объявление массива
 
-                        for (int i = 4; i <= 125; i++)
+                        for (int i = 4; i <= 175; i++)
                         {
                             string STR = excelworksheet.Cells[j, 3].Text;
                             string _index = excelworksheet.Cells[j, 2].Text;

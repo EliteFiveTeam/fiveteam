@@ -143,7 +143,7 @@
             this.bt_select_anat.Name = "bt_select_anat";
             this.bt_select_anat.Size = new System.Drawing.Size(75, 23);
             this.bt_select_anat.TabIndex = 21;
-            this.bt_select_anat.Text = "Открыть";
+            this.bt_select_anat.Text = "Обзор";
             this.bt_select_anat.UseVisualStyleBackColor = true;
             this.bt_select_anat.Click += new System.EventHandler(this.bt_select_anat_Click);
             // 
@@ -153,7 +153,7 @@
             this.bt_select_fos.Name = "bt_select_fos";
             this.bt_select_fos.Size = new System.Drawing.Size(75, 23);
             this.bt_select_fos.TabIndex = 20;
-            this.bt_select_fos.Text = "Открыть";
+            this.bt_select_fos.Text = "Обзор";
             this.bt_select_fos.UseVisualStyleBackColor = true;
             this.bt_select_fos.Click += new System.EventHandler(this.bt_select_fos_Click);
             // 
@@ -181,7 +181,7 @@
             this.bt_select_rp.Name = "bt_select_rp";
             this.bt_select_rp.Size = new System.Drawing.Size(75, 23);
             this.bt_select_rp.TabIndex = 17;
-            this.bt_select_rp.Text = "Открыть";
+            this.bt_select_rp.Text = "Обзор";
             this.bt_select_rp.UseVisualStyleBackColor = true;
             this.bt_select_rp.Click += new System.EventHandler(this.bt_select_rp_Click);
             // 
